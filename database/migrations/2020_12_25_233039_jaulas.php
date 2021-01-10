@@ -17,7 +17,8 @@ class Jaulas extends Migration
             $table->id();
             $table->string('nombre_jaula');
             $table->string('numero');
-            $table->unsignedBigInteger('centro')->references('id')->on('centros');
+            $table->unsignedBigInteger('empresa')->references('id')->on('empresas')->onDelete('cascade');
+            $table->unsignedBigInteger('centro')->references('id')->on('centros')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -1,8 +1,4 @@
-@extends('layouts.header')
 
-@section('title', 'Quality Metrics')
-
-@section('content')
 
 <x-guest-layout>
     <x-jet-authentication-card>
@@ -47,4 +43,3 @@
     </x-jet-authentication-card>
 </x-guest-layout>
 
-@endsection

@@ -1,9 +1,3 @@
-@extends('layouts.header')
-
-@section('title', 'Quality Metrics')
-
-@section('content')
-
 <x-guest-layout>
     <x-jet-authentication-card>
         <x-slot name="logo">
@@ -20,6 +14,11 @@
 
         <form method="POST" action="{{ route('login') }}">
             @csrf
+
+            <div class="col s12 center">
+                <br>
+                <img src="https://www.qualitymetrics.cl/img/logo-header.png" class="responsive-img center">
+            </div>
 
             <div>
                 <x-jet-label for="email" value="{{ __('E-mail') }}" />
@@ -56,5 +55,3 @@
         </form>
     </x-jet-authentication-card>
 </x-guest-layout>
-
-@endsection

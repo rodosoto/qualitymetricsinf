@@ -1,0 +1,1 @@
+<select class='browser-default white-text grey darken-4'>@for ($j = 0 ; $j < count($user) ; $j++) @if ($user[$j]->empresa == $maquina[$i]->empresa)<option value='{{ $user[$j]->id }}'>{{ $user[$j]->name }}</option>@endif @endfor</select>

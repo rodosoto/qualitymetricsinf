@@ -4,31 +4,41 @@
 
 @section('content')
 
-<x-guest-layout>
-    <x-jet-authentication-card>
-        <x-slot name="logo">
-            <x-jet-authentication-card-logo />
-
-        </x-slot>
-
-        <x-jet-validation-errors class="mb-4" />
-
-        <form method="POST" action="{{ route('add.empresa.bd') }}">
+<div class="container">
+    <div class="row">
+        <br><br><br><br><br><br><br><br>
+        <div class="col s4"></div>
+        <div class="col s4 z-depth-2 grey darken-4">            
+            <form method="POST" action="{{ route('add.empresa.bd') }}">
             @csrf
 
-            <div>
-                <x-jet-label for="name" value="{{ __('Nombre de la Empresa') }}" />
-                <x-jet-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            </div>
+                <div class="col s12 center">
+                    <br>
+                    <img src="https://www.qualitymetrics.cl/img/logo-header.png" class="responsive-img">
+                </div>
+                <div class="col s12">
+                    <h6 class="white-text center">Registrar Empresa</h6>
+                    <br><br><br>
+                </div>
 
-            <div class="flex items-center justify-end mt-4">
+                <div class="input-field col s12 white-text">
+                    <input  id="first_name" type="text" class="validate white-text" value="{{old('name')}}" name="name" required autofocus autocomplete="name">
+                    <label class="white-text" for="first_name" value="{{ __('Nombre de la Empresa') }}">{{ __('Nombre de la Empresa') }}</label>
+                </div>
+                <div class="col s12 center">
+                    <br><br>
+                    <button type="submit" class="blue btn center">
+                        <i class="material-icons right">save</i>Registrar Empresa
+                    </button>
 
-                <x-jet-button class="ml-4">
-                    {{ __('Registrar empresa') }}
-                </x-jet-button>
-            </div>
-        </form>
-    </x-jet-authentication-card>
-</x-guest-layout>
+                </div>
+                <br>
+            </form>
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        </div>
+
+    </div>        
+</div>
+    
 
 @endsection

@@ -12,7 +12,9 @@ use App\Models\Jaula;
 
 class GeneralController extends Controller
 {
-	
+	public function cargando(){
+        return view('admin.registroE');
+    }
 
     public function maquina_ver(){
     	$maquina = new Maquina();
@@ -28,7 +30,7 @@ class GeneralController extends Controller
 
     	$emp->save();
 
-    	return redirect('/dashboard');
+    	return redirect('/exito');
     }
 
     public function agrega_centro(Request $request){
@@ -39,19 +41,18 @@ class GeneralController extends Controller
 
         $cent->save();
 
-        return redirect('/dashboard');
+        return redirect('/exito');
     }
 
     public function agrega_jaula(Request $request){
         $jaula = new Jaula();
 
-        $jaula->nombre_jaula = $request->name;
         $jaula->numero = $request->numero;
         $jaula->centro = $request->centro_select;
 
         $jaula->save();
 
-        return redirect('/dashboard');
+        return redirect('/exito');
     }
 
     public function agrega_maquina(Request $request){
@@ -62,11 +63,12 @@ class GeneralController extends Controller
         $maquina->modelo = $request->modelo;
         $maquina->jaula = $request->centro_select;
         $maquina->centro = $request->jaula_select;
+        $maquina->empresa = $request->empresa;
         $maquina->estado = "off";
 
         $maquina->save();
 
-        return redirect('/dashboard');
+        return redirect('/exito');
     }
 
 

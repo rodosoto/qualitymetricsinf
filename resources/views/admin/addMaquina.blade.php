@@ -1,17 +1,29 @@
-<x-guest-layout>
-    <x-jet-authentication-card>
-        <x-slot name="logo">
-            <x-jet-authentication-card-logo />
+@extends('layouts.header')
 
-        </x-slot>
+@section('title', 'Quality Metrics')
 
-        <x-jet-validation-errors class="mb-4" />
+@section('content')
+
+<div class="container">
+    <div class="row">
+        <br><br><br>
+        <div class="col s4"></div>
+        <div class="col s4 grey darken-4">   
 
         <form method="POST" action="{{ route('add.maquina.bd') }}">
             @csrf
 
+            <div class="col s12 center">
+                <br>
+                <img src="https://www.qualitymetrics.cl/img/logo-header.png" class="responsive-img">
+            </div>
+            <div class="col s12">
+                <h6 class="white-text center">Registrar Máquina</h6>
+                <br><br>
+            </div>
+ 
             <div class="flex items-center mt-4">
-                <select id="empresa_select" name="empresa">
+                <select class="browser-default white-text grey darken-4" id="empresa_select" name="empresa">
                     <option value="" disabled selected>Selecciona una empresa</option>
                     @for ($i = 0 ; $i < count($empresa) ; $i++)
                         <option value="{{ $empresa[$i]->id }}">{{ $empresa[$i]->nombre_empresa }}</option>
@@ -21,45 +33,48 @@
             <br>
 
             <div class="flex items-center mt-4">
-            	<select id="centro_select" name="centro_select">
-            		<option value=''>Selecciona un centro</option>
+            	<select class="browser-default white-text grey darken-4" id="centro_select" name="centro_select">
+            		<option value=''>--Se llenará cuando seleccione una empresa--</option>
             	</select>
             	
             </div>
             <br>
 
             <div class="flex items-center mt-4">
-            	<select id="jaula_select" name="jaula_select">
-            		<option value=''>Selecciona una jaula</option>
+            	<select class="browser-default white-text grey darken-4" id="jaula_select" name="jaula_select">
+            		<option value=''>--Se llenará cuando seleccione un centro--</option>
             	</select>
             	
             </div>
             <br><br>
 
-            <div>
-                <x-jet-label for="tipo" value="{{ __('Tipo') }}" />
-                <x-jet-input id="tipo" class="block mt-1 w-full" type="text" name="tipo" :value="old('tipo')" required autofocus autocomplete="tipo" />
+            <div class="input-field col s12">
+                <input  id="tipo" name="tipo" type="text" class="validate white-text" value="{{old('tipo')}}" required autofocus autocomplete="tipo">
+                <label class="white-text" for="tipo" value="{{ __('Tipo') }}">{{ __('Tipo de máquina') }}</label>
             </div>
 
-            <div>
-                <x-jet-label for="modelo" value="{{ __('Modelo') }}" />
-                <x-jet-input id="modelo" class="block mt-1 w-full" type="text" name="modelo" :value="old('modelo')" required autofocus autocomplete="name" maxlength="3"/>
+            <div class="input-field col s12">
+                <input  id="modelo" name="modelo" type="text" class="validate white-text" value="{{old('modelo')}}" required autofocus autocomplete="modelo">
+                <label class="white-text" for="modelo" value="{{ __('Modelo') }}">{{ __('Id de máquina') }}</label>
             </div>
 
-            <div>
-                <x-jet-label for="nombre_maquina" value="{{ __('Nombre') }}" />
-                <x-jet-input id="nombre_maquina" class="block mt-1 w-full" type="text" name="nombre_maquina" :value="old('nombre_maquina')" required autofocus autocomplete="name" />
+            <div class="input-field col s12">
+                <input  id="nombre_maquina" name="nombre_maquina" type="text" class="validate white-text" value="{{old('nombre_maquina')}}" required autofocus autocomplete="nombre_maquina">
+                <label class="white-text" for="nombre_maquina" value="{{ __('Nombre de la máquina') }}">{{ __('Nombre de la máquina') }}</label>
             </div>
-
-            <div class="flex items-center justify-end mt-4">
-
-                <x-jet-button class="ml-4">
-                    {{ __('Registrar Máquina') }}
-                </x-jet-button>
+            <div class="col s12 center">
+                <br>
+                <button type="submit" class="gblue btn center">
+                    <i class="material-icons right">save</i>Registrar Máquina
+                </button>
+                <br><br>
             </div>
-        </form>
-    </x-jet-authentication-card>
-</x-guest-layout>
+            </div>
+        </div>
+    </div>        
+</div>
+
+@endsection
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 
@@ -78,7 +93,7 @@
 							$('#centro_select').append("<option value='' >Selecciona un centro</option>");
 
 							$.each(centros, function(index,value){
-								$('#centro_select').append("<option value='"+  index +"'>"+ value +"</option>");
+								$('#centro_select').append("<option value='"+  index +"'>"+ value[0]+", "+value[1] +"</option>");
 							});
 						}
 						
@@ -99,9 +114,7 @@
 							$('#jaula_select').append("<option value='' >Selecciona una jaula</option>");
 
 							$.each(jaulas, function(index,value){
-								console.log(index);
-								console.log(value);
-								$('#jaula_select').append("<option value='"+  index +"'>"+ value +"</option>");
+								$('#jaula_select').append("<option value='"+  index[0] +"'>n: "+ value[0] +"</option>");
 							});
 						}
 						

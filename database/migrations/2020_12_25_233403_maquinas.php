@@ -20,8 +20,9 @@ class Maquinas extends Migration
             $table->string('nombre');
             $table->string('estado');
             $table->timestamp('ultima_medicion');
-            $table->unsignedBigInteger('centro')->references('id')->on('centros');
-            $table->unsignedBigInteger('jaula')->references('id')->on('jaulas');
+            $table->unsignedBigInteger('centro')->references('id')->on('centros')->onDelete('cascade');
+            $table->unsignedBigInteger('jaula')->references('id')->on('jaulas')->onDelete('cascade');
+            $table->unsignedBigInteger('empresa')->references('id')->on('empresas')->onDelete('cascade');
             $table->timestamps();
         });
     }

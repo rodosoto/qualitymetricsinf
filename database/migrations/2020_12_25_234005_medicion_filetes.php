@@ -31,7 +31,6 @@ class MedicionFiletes extends Migration
             $table->integer('ptosMel');
             $table->double('areaHem');
             $table->integer('puntosHem');
-            $table->json('mapaCoordFilete');
             $table->timestamps();
 
         });

@@ -7,7 +7,8 @@ use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\CreaObjeto;
 use App\Http\Controllers\CreaEmpresaController;
 use App\Http\Controllers\UbicacionController;
-use GuzzleHttp\Client;
+use App\Http\Controllers\GraficosController;
+use App\Http\Controllers\InformesController;
 
 
 /*
@@ -27,11 +28,13 @@ Route::get('/', function () {
 
 Route::get('/datos', [ApiController::class, 'recibe'])->name('api.rest');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', [GeneralController::class, 'maquina_ver'])->name('dashboard');
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', [CreaObjeto::class, 'dashboard'])->name('dashboard');
 
 Route::get('/empresa', function() {
 	return view('admin.addEmpresa');
 })->name('add.empresa');
+
+Route::get('/exito', [GeneralController::class, 'cargando'])->name('cargando');
 
 Route::post('/empresa/add', [GeneralController::class, 'agrega_empresa'])->name('add.empresa.bd');
 
@@ -50,6 +53,43 @@ Route::get('jaula/obt', [CreaObjeto::class, 'jaula'] )->name('listado.jaulas');
 Route::get('/maquina', [CreaObjeto::class, 'centro_jaula'])->name('add.maquina');
 Route::post('/maquina/add', [GeneralController::class, 'agrega_maquina'])->name('add.maquina.bd');
 
-Route::get('/users/show', [CreaObjeto::class, 'user'])->name('show.users');
+Route::post('/assigUser', [CreaObjeto::class, 'assigUser'])->name('assig.user');
 
+Route::get('/maquina/assign', [CreaObjeto::class, 'assignMaquina'])->name('assign.maquina');
+
+Route::get('empresa/obtME', [CreaObjeto::class, 'empresa_maquina'] )->name('listado.empresasM');
+
+Route::get('empresa/obtMC', [CreaObjeto::class, 'centro_maquina'] )->name('listado.centrosM');
+
+Route::get('empresa/obtMJ', [CreaObjeto::class, 'jaula_maquina'] )->name('listado.centrosM');
+
+Route::get('/users/show', [CreaObjeto::class, 'user'])->name('show.users');
+  
 Route::get('/empresa/show', [CreaObjeto::class, 'empresa_show'])->name('show.empresas');
+Route::get('/maquina/borra', [CreaObjeto::class, 'borra_maquina'])->name('borra.maquina');
+
+Route::get('/empresa/borra', [CreaObjeto::class, 'borra_empresa'])->name('borra.empresa');
+
+Route::post('/user/asigna/empresa', [CreaObjeto::class, 'asigna_user_empresa'])->name('asigna.user.empresa');
+
+Route::get('/user/borra', [CreaObjeto::class, 'user_borra'])->name('user.borra');
+
+Route::get('/jaula/borra', [CreaObjeto::class, 'jaula_borra'])->name('jaula.borra');
+
+Route::get('/centro/borra', [CreaObjeto::class, 'centro_borra'])->name('centro.borra');
+
+Route::get('/tabla/jaula/', [CreaObjeto::class, 'tabla_jaulas'] )->name('tabla.jaulas');
+
+Route::get('/tabla/centro/', [CreaObjeto::class, 'tabla_centro'] )->name('tabla.centros');
+
+Route::get('/graficos/filete/ce', [GraficosController::class, 'graficosBarra'] )->name('graficos.barra');
+
+Route::get('/graficos/filete/ot', [GraficosController::class, 'graficosDonut'] )->name('graficos.donut');
+
+Route::get('informes/excel', [InformesController::class , 'medicion_filete'])->name('informes.filete');
+
+Route::get('informes/pdf', [InformesController::class , 'medicion_filetePDF'])->name('informes.filetePDF');
+
+
+
+
