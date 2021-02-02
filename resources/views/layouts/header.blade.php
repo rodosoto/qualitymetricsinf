@@ -1,7 +1,10 @@
+
+
 <!DOCTYPE html>
 <html>
 <head>
 	<title>@yield('title')</title>
+  <link rel="icon" type="image/png" href="https://www.qualitymetrics.cl/img/logo-header.png" />
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -34,6 +37,23 @@
    		.input-field .prefix.active {
     		 color: #0d47a1;
    		}
+
+      #canvas1{
+        width: 340px;
+        height: 140px;
+        margin-top:20px;
+      }
+      #canvas2{
+        width: 340px;
+        height: 140px;
+        margin-top:20px;
+      }
+
+      #canvas3{
+        width: 340px;
+        height: 140px;
+        margin-top:20px;
+      }
     </style>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
       <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
@@ -45,16 +65,6 @@
 <ul id="dropdown1" class="dropdown-content grey darken-4 white-text">
   <li><a class="white-text" href="{{ route('add.empresa') }}">Agregar Empresa</a></li>
   <li><a class="white-text" href="{{ route('show.empresas') }}">Ver Empresa</a></li>
-</ul>
-
-<ul id="dropdown2" class="dropdown-content grey darken-4 white-text">
-  <li><a class="white-text" href="{{ route('add.centro') }}">Agregar Centro</a></li>
-  <li><a class="white-text modal-trigger" href="#modalcentro">Eliminar Centro</a></li>
-</ul>
-
-<ul id="dropdown3" class="dropdown-content grey darken-4 white-text">
-  <li><a class="white-text" href="{{ route('add.jaula') }}">Agregar Jaula</a></li>
-  <li><a class="white-text modal-trigger" href="#modaljaula" >Eliminar Jaula</a></li>
 </ul>
 
 <ul id="dropdown4" class="dropdown-content grey darken-4 white-text">
@@ -69,7 +79,8 @@
 
 <ul id="dropdown6" class="dropdown-content grey darken-4 white-text">
   <li><a class="white-text" href="{{ route('profile.show') }}">Ver perfil</a></li>
-  <li><a class="white-text modal-trigger" href="#modalinformes">Informes</a></li>
+  <li><a class="white-text modal-trigger" href="#modalinformes">Visualización rápida</a></li>
+  <li><a class="white-text modal-trigger" href="{{ route('reportes') }}">Reporte</a></li>
   <form method="POST" action="{{ route('logout') }}">
     @csrf
     <li><a class="white-text" href="{{ route('logout') }}" onclick="event.preventDefault();
@@ -80,13 +91,12 @@
 <nav class="grey darken-4">
   <div class="nav-wrapper">
     <a href="/dashboard" class="brand-logo blue-text">
-       Fragma Server by Quality Metrics
+      <h5>Sistema de visualización de datos de calidad</h5>        
+       
     </a>
     <ul class="right hide-on-med-and-down">
       @if (Auth::user()->tipo == 'admin')
       <li><a class="dropdown-trigger" data-target="dropdown1" href="sass.html">Empresas<i class="material-icons right">arrow_drop_down</i></a></li>
-      <li><a class="dropdown-trigger" data-target="dropdown2" href="badges.html">Centros<i class="material-icons right">arrow_drop_down</i></a></li>
-      <li><a class="dropdown-trigger" data-target="dropdown3" href="badges.html">Jaulas<i class="material-icons right">arrow_drop_down</i></a></li>
       <li><a class="dropdown-trigger" data-target="dropdown4" href="badges.html">Maquinas<i class="material-icons right">arrow_drop_down</i></a></li>
       <li><a class="dropdown-trigger" data-target="dropdown5" href="badges.html">Otros<i class="material-icons right">arrow_drop_down</i></a></li>
       @endif

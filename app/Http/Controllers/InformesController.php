@@ -21,4 +21,8 @@ class InformesController extends Controller
     	$pdf = PDF::loadview('informes.medfiletepdf', compact('medicion'))->setPaper("A3", "landscape");
     	return $pdf->download('Filetes.pdf');
     }
+
+    public function reporte_pdf(){
+    	return view('informes.reporte');
+    }
 }

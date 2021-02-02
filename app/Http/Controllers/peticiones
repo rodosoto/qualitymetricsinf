@@ -1,0 +1,13 @@
+agreagr grafivco de barra que muestre el numero de lesiones en el informe
+
+replicar titulo del reporte original (en vez de resumen de actrividades, poner datos seleccionados para el reporte. en vez de reporte n1, reporte automatico)
+
+titulo del reporte: ReporteCalidad-fecha_inicio-fecha_termino
+cambiar icono de registro 
+
+en el titulo, agregar nombre de la seccion "sistema de visualizacion de datos de calidad: perfil (maquinas, reporte, etc)"
+
+crear api rest para guardar mapas, seleccionar el ultimo que llego y borrar los demas
+si llega uno con el mismo barcode, eliminar el anterior
+
+modificar sectionCod: despues de L1, agregar una letra que represente el tipo de ubicacion 

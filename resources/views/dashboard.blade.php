@@ -4,7 +4,6 @@
 
 @section('content')
 
-
     <div class="row">
         <br>
         
@@ -13,150 +12,92 @@
             @for ($i = 0 ; $i < count($empresa) ; $i++)
                 @if($empresa[$i]->id == Auth::user()->empresa)
                     <h6 class="white-text">{{ $empresa[$i]->nombre_empresa}}</h6>
+                    @php
+                        $emp = "";
+                        $emp = $empresa[$i]->id;
+                    @endphp                    
                 @endif
             @endfor   
             
-            
-        @if (Auth::user()->tipo == 'admin')   
-        </div>
-        <div class="col s12 black">            
-            <div class="col s4 white-text" id="empresas">
-                <h5>Selecciona una Empresa</h5>
-                    <select class="browser-default grey darken-4 white-text" id="empresa_select">
-                        <option value="" disabled selected>--Listado de empresas--</option>
-                        @for ($i = 0 ; $i < count($empresa) ; $i++)
-                            <option value="{{ $empresa[$i]->id }}">{{ $empresa[$i]->nombre_empresa }}</option>
-                        @endfor
-                    </select>                
-            </div>
-            <div class="col s4 white-text" id="centros">
-                <h5>Selecciona un centro</h5>
-                    <select class="browser-default grey darken-4 white-text" id="centro_select">
-                        <option value="" disabled selected>--Se llenará cuando escoja una Empresa--</option>
-                    </select>                
-            </div>
-
-            <div class="col s4 white-text" id="jaulas">
-                <h5>Selecciona una Jaula</h5>
-                    <select class="browser-default grey darken-4 white-text" id="jaula_select">
-                        <option value="" disabled selected>--Se llenará cuando escoja un centro--</option>
-                    </select>                
-            </div>
-
-            @endif
-            
-            <div class="col s12" id="maquinas" height="200px">
-                @for ($i = 0 ; $i < count($maquina) ; $i++ )
-                <div class="col s5">
-                    <div class="card grey darken-4">
-                        <div class="card-content white-text">
-                            <span class="card-title white-text">{{ $maquina[$i]->nombre }}</span>
+            <div class="col s12" id="maquinas">                
+                <div class="col s2">
+                    @for ($i = 0 ; $i < count($maquina) ; $i++ )
+                    <div class="col s12 grey darken-4" onclick="grafico_entero('{{ $maquina[$i]->id }}', '{{ $emp }}')">
                             <h6 class="white-text"><strong>Tipo:</strong> {{ $maquina[$i]->tipo }}</h6>
                             <h6 class="white-text"><strong>Modelo: {{ $maquina[$i]->modelo }}</strong></h6>
                             @if ($maquina[$i]->estado == 'on')
                                 <h6 class="green-text"> Máquina encendida</h6>
                             @else
                                 <h6 class="red-text"> Máquina apagada</h6>
-                            @endif                               
-                        </div>
-                        <div class="col s12 grey darken-4">
-                            <hr>
-                            <h6 class="white-text">Desplegar graficos</h6>
-                            @if ($maquina[$i]->tipo == 'filete' || $maquina[$i]->tipo == 'Filete')
-                            <div class="col s12 center grey darken-4">
-                                <a class="col s3 center hoverable" onclick="grafico_entero('{{ $maquina[$i]->id}}','entero')"><h6 class="blue-text">Color entero</h6></a>
-                                <a class="col s3 center hoverable" onclick="grafico_entero('{{ $maquina[$i]->id}}','lomo')"><h6 class="blue-text">Color lomo</h6></a> 
-                                <a class="col s3 center hoverable" onclick="grafico_entero('{{ $maquina[$i]->id}}','belly')"><h6 class="blue-text">Color belly</h6></a>  
-                                <a class="col s3 center hoverable" onclick="grafico_entero('{{ $maquina[$i]->id}}','NCQ')"><h6 class="blue-text">Color NCQ</h6></a> 
-                                
-                            </div> 
-                            <div class="col s12 grey darken-4 center">
-                                <a class="col s4 center hoverable" onclick="donut('{{ $maquina[$i]->id}}','melanosis')"><h6 class="blue-text">Melanosis</h6></a>
-                                <a class="col s4 center hoverable" onclick="donut('{{ $maquina[$i]->id}}','hematomas')"><h6 class="blue-text"></h6>Hematomas</a>
-                                <a class="col s4 center hoverable" onclick="donut('{{ $maquina[$i]->id}}','gaping')"><h6 class="blue-text">Gaping</h6></a>
-                                <br><br><br>          
+                            @endif
+                    <hr>                                                    
+                    </div>
+                    @endfor 
+                                    
+                </div>
+                <div class="col s10" id="graficos" style="height: 600px; width: 1250px; position:absolute; top:155px; left: 250px">
+                            <div class="col s12">
+                                <div class="col s3 grey darken-4" id="colorEntero" style="height: 250px; padding: 10px"></div>
+                                <div class="col s3 grey darken-4" id="colorLomo" style="height: 250px; padding: 10px"></div>
+                                <div class="col s3 grey darken-4" id="colorBelly" style="height: 250px; padding: 10px"></div>
+                                <div class="col s3 grey darken-4" id="colorNCQ" style="height: 250px; padding: 10px"></div>                                
                             </div>
-                            @endif                           
-                        </div>
-                        
-                    </div>                    
-                </div>
-                <div class="col s7 center" id="graficos">
-                    <div class="card grey darken-4 center">
-                        <div class="card-content white-text">
-                            <div id="{{ $maquina[$i]->id}}" style="height: 280px;"></div>
-                            
-                        </div>
-                    </div>                      
-                </div>
+                            <div class="col s12">
+                                <div class="col s12 grey darken-4">
+                                    <hr>                                    
+                                </div>
+                                <div class="col s4 grey darken-4" id="melanosis" style="height: 200px; padding: 10px"></div>
+                                <div class="col s4 grey darken-4" id="gaping" style="height: 200px; padding: 10px"></div>
+                                <div class="col s4 grey darken-4" id="hematomas" style="height: 200px; padding: 10px"></div>                                
+                            </div>
+                            <div class="col s12">
+                                <div class="col s12 grey darken-4">
+                                    <hr>
+                                </div>
+                                <div class="col s4 grey darken-4">
+                                    <h5 class="white-text center">HEATMAP MELANOSIS</h5>            
+                                </div>
+                                <div class="col s4 grey darken-4">
+                                    <h5 class="white-text center">HEATMAP GAPING</h5>            
+                                </div>
+                                <div class="col s4 grey darken-4">
+                                    <h5 class="white-text center">HEATMAP HEMATOMAS</h5>            
+                                </div>                                
+                            </div>
+                            <div class="col s12">
+                                <div class="col s4 grey darken-4" id="melanosis" style="height: 200px; padding: 10px">
+                                    <div class="col s11">
+                                        <canvas id="canvas1">        
+                                        </canvas>                           
+                                    </div>
+                                    <div class="col s1">
+                                        <img src="imagenes/hem.png" height="180px">                            
+                                    </div>
 
-                @endfor                
+                                </div>
+                                <div class="col s4 grey darken-4" id="gaping" style="height: 200px; padding: 10px">
+                                    <div class="col s11">
+                                        <canvas id="canvas2">        
+                                        </canvas>                           
+                                    </div>
+                                    <div class="col s1">
+                                        <img src="imagenes/gap.png" height="180px">                            
+                                    </div>
+                                </div>
+                                <div class="col s4 grey darken-4" id="hematomas" style="height: 200px; padding: 10px">
+                                    <div class="col s11">
+                                        <canvas id="canvas3">        
+                                        </canvas>                           
+                                    </div>
+                                    <div class="col s1">
+                                        <img src="imagenes/mel.png" height="180px">                            
+                                    </div>
+                                </div>                                
+                            </div>                   
+                </div>              
             </div>
         </div>        
     </div>    
-<div id="modaljaula" class="modal grey darken-4">
-  <div class="modal-content col">
-    <h5 class="white-text center">Eliminar jaula</h5>
-    <div class="col s5">
-        <form>
-            <div class="col white-text" id="empresas">
-                <h5>Selecciona una Empresa</h5>
-                <select class="browser-default grey darken-4 white-text" id="empresa_select2">
-                    <option value="" disabled selected>--Listado de empresas--</option>
-                    @for ($i = 0 ; $i < count($empresa) ; $i++)
-                        <option value="{{ $empresa[$i]->id }}">{{ $empresa[$i]->nombre_empresa }}</option>
-                    @endfor
-                </select>                
-            </div>
-            <div class="input-field col s12 white-text">
-                <input  id="numero_jaula" type="text" class="validate white-text" value="{{old('name')}}" name="name" required autofocus autocomplete="name">
-                <label class="white-text" for="numero_jaula">{{ __('Numero de jaula') }}</label>
-            </div>
-            <a id="boton_cambio1">
-                Buscar
-            </a>
-        </form>
-        
-    </div>
-    <div class="col s12" id="tabla_jaula"></div>
-
-    <div class="modal-footer grey darken-3" hidden>
-      <button class="modal-close blue btn" id="cierra_modal_1">
-        Eliminar
-      </button>
-    </div>
-  </div>
-</div> 
-
-<div id="modalcentro" class="modal grey darken-4">
-  <div class="modal-content col">
-    <h5 class="white-text center">Eliminar Centro</h5>
-    <div class="col s5">
-        <form>
-            <div class="col white-text" id="centros2">
-                <h5>Selecciona una Empresa</h5>
-                <select class="browser-default grey darken-4 white-text" id="empresa_select3">
-                    <option value="" disabled selected>--Listado de empresas--</option>
-                    @for ($i = 0 ; $i < count($empresa) ; $i++)
-                        <option value="{{ $empresa[$i]->id }}">{{ $empresa[$i]->nombre_empresa }}</option>
-                    @endfor
-                </select>                
-            </div>
-            <a id="boton_cambio2">
-                Buscar
-            </a>
-        </form>
-        
-    </div>
-    <div class="col s12" id="tabla_centro"></div>
-
-    <div class="modal-footer grey darken-3" hidden>
-      <button class="modal-close blue btn" id="cierra_modal_2">
-        Eliminar
-      </button>
-    </div>
-  </div>
-</div> 
 
 <div id="modalinformes" class="modal grey darken-4">
   <div class="modal-content col">
@@ -187,587 +128,872 @@
       </button>
     </div>
   </div>
-</div> 
+</div>
+<script src="https://cdn.anychart.com/releases/8.9.0/js/anychart-core.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.9.0/js/anychart-cartesian.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.9.0/js/anychart-cartesian.min.js"></script>
+<link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
+  <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
+ <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
 
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript">
+    
 
-    <script type="text/javascript">
+    const canvas = document.getElementById('canvas1');
+    const ctx = canvas.getContext('2d');
+
+    const canvas2 = document.getElementById('canvas2');
+    const ctx2 = canvas2.getContext('2d');
+
+    const canvas3 = document.getElementById('canvas3');
+    const ctx3 = canvas3.getContext('2d');
+
+    canvas.width = 600;
+    canvas.height = 199;
+
+    canvas2.width = 600;
+    canvas2.height = 199;
+
+    canvas3.width = 600;
+    canvas3.height = 199;
+
+    const image1 = new Image();
+    image1.src = "imagenes/blank.jpg";
+
+    const image2 = new Image();
+    image2.src = "imagenes/blank.jpg";
+
+    const image3 = new Image();
+    image3.src = "imagenes/blank.jpg";
 
 
-        function grafico_entero(id,nombre){
+        function grafico_entero(id, empresa){
 
-            var carga = "<div class='preloader-wrapper big active'>    <div class='spinner-layer spinner-blue-only'>      <div class='circle-clipper left'>        <div class='circle'></div>      </div><div class='gap-patch'>        <div class='circle'></div>      </div><div class='circle-clipper right'>        <div class='circle'></div>      </div>    </div>  </div>";
-            $('#'+id).html("<br><br><h5 class='white-text center'>Cargando grafico</h5><br><br>"+carga);
+            var carga = "<div class='preloader-wrapper big active center'>    <div class='spinner-layer spinner-blue-only'>      <div class='circle-clipper left'>        <div class='circle'></div>      </div><div class='gap-patch'>        <div class='circle'></div>      </div><div class='circle-clipper right'>        <div class='circle'></div>      </div>    </div>  </div>";
+            $('#colorEntero').html("<h5 class='white-text center'>Cargando grafico</h5>"+carga);
+            $('#colorLomo').html("<h5 class='white-text center'>Cargando grafico</h5>"+carga);
+            $('#colorBelly').html("<h5 class='white-text center'>Cargando grafico</h5>"+carga);
+            $('#colorNCQ').html("<h5 class='white-text center'>Cargando grafico</h5>"+carga);
+            $('#melanosis').html("<h5 class='white-text center'>Cargando grafico</h5>"+carga);
+            $('#gaping').html("<h5 class='white-text center'>Cargando grafico</h5>"+carga);
+            $('#hematomas').html("<h5 class='white-text center'>Cargando grafico</h5>"+carga);
 
-            $.get('/graficos/filete/ce', {id : id}, function(array){
-
-                $('#'+id).html("Grafico Color "+nombre);
-                if(nombre=="entero"){
-                    new Morris.Bar({
-                    element: id,
-                    resize : true,
-                    data: [
-                        {
-                            color : '20',
-                            a : array[20][0]
-                        },
-                            {
-                                color : '21',
-                                a : array[21][0]
-                            }
-                            ,
-                            {
-                                color : '22',
-                                a : array[22][0]
-                            }
-                            ,
-                            {
-                                color : '23',
-                                a : array[23][0]
-                            }
-                            ,
-                            {
-                                color : '24',
-                                a : array[24][0]
-                            }
-                            ,
-                            {
-                                color : '25',
-                                a : array[25][0]
-                            }
-                            ,
-                            {
-                                color : '26',
-                                a : array[26][0]
-                            }
-                            ,
-                            {
-                                color : '27',
-                                a : array[27][0]
-                            }
-                            ,
-                            {
-                                color : '28',
-                                a : array[28][0]
-                            }
-                            ,
-                            {
-                                color : '29',
-                                a : array[29][0]
-                            }
-                            ,
-                            {
-                                color : '30',
-                                a : array[30][0]
-                            }
-                            ,
-                            {
-                                color : '31',
-                                a : array[31][0]
-                            }
-                            ,
-                            {
-                                color : '32',
-                                a : array[32][0]
-                            }
-                            ,
-                            {
-                                color : '33',
-                                a : array[33][0]
-                            }
-                            ,
-                            {
-                                color : '34',
-                                a : array[34][0]
-                            }
-                        ],
-                        xkey: 'color',
-                        ykeys: ['a'],
-                        labels: ['Entero']
-                    });
+            $.get('/graficos/filete/ce', {id : id, empresa: empresa}, function(array){
+                if(array=="vacio"){
+                    alert("Aún no se le ha asignado una empresa, contacte a soporte técnico para mas detalles");
+                    $('#colorEntero').html("");
+                    $('#colorLomo').html("");
+                    $('#colorBelly').html("");
+                    $('#colorNCQ').html("");
                 }
-                else if(nombre=="lomo"){
-                    new Morris.Bar({
-                    element: id,
-                    resize : true,
-                    data: [
-                        {
-                            color : '20',
-                            a : array[20][1]
-                        },
-                            {
-                                color : '21',
-                                a : array[21][1]
-                            }
-                            ,
-                            {
-                                color : '22',
-                                a : array[22][1]
-                            }
-                            ,
-                            {
-                                color : '23',
-                                a : array[23][1]
-                            }
-                            ,
-                            {
-                                color : '24',
-                                a : array[24][1]
-                            }
-                            ,
-                            {
-                                color : '25',
-                                a : array[25][1]
-                            }
-                            ,
-                            {
-                                color : '26',
-                                a : array[26][1]
-                            }
-                            ,
-                            {
-                                color : '27',
-                                a : array[27][1]
-                            }
-                            ,
-                            {
-                                color : '28',
-                                a : array[28][1]
-                            }
-                            ,
-                            {
-                                color : '29',
-                                a : array[29][1]
-                            }
-                            ,
-                            {
-                                color : '30',
-                                a : array[30][1]
-                            }
-                            ,
-                            {
-                                color : '31',
-                                a : array[31][1]
-                            }
-                            ,
-                            {
-                                color : '32',
-                                a : array[32][1]
-                            }
-                            ,
-                            {
-                                color : '33',
-                                a : array[33][1]
-                            }
-                            ,
-                            {
-                                color : '34',
-                                a : array[34][1]
-                            }
-                        ],
-                        xkey: 'color',
-                        ykeys: ['a'],
-                        labels: ['Lomo']
-                    });
+                else{
+                   if(array[0][0] == 0){
+                    M.toast({html : "No hay datos de color para las ultimas 24 horas", classes : "rounded"});
+                    $('#colorEntero').html("");
+                    $('#colorLomo').html("");
+                    $('#colorBelly').html("");
+                    $('#colorNCQ').html("");
                 }
-                else if(nombre=="belly"){
-                    new Morris.Bar({
-                    element: id,
-                    resize : true,
-                    data: [
-                        {
-                            color : '20',
-                            a : array[20][2]
-                        },
-                            {
-                                color : '21',
-                                a : array[21][2]
-                            }
-                            ,
-                            {
-                                color : '22',
-                                a : array[22][2]
-                            }
-                            ,
-                            {
-                                color : '23',
-                                a : array[23][2]
-                            }
-                            ,
-                            {
-                                color : '24',
-                                a : array[24][2]
-                            }
-                            ,
-                            {
-                                color : '25',
-                                a : array[25][2]
-                            }
-                            ,
-                            {
-                                color : '26',
-                                a : array[26][2]
-                            }
-                            ,
-                            {
-                                color : '27',
-                                a : array[27][2]
-                            }
-                            ,
-                            {
-                                color : '28',
-                                a : array[28][2]
-                            }
-                            ,
-                            {
-                                color : '29',
-                                a : array[29][2]
-                            }
-                            ,
-                            {
-                                color : '30',
-                                a : array[30][2]
-                            }
-                            ,
-                            {
-                                color : '31',
-                                a : array[31][2]
-                            }
-                            ,
-                            {
-                                color : '32',
-                                a : array[32][2]
-                            }
-                            ,
-                            {
-                                color : '33',
-                                a : array[33][2]
-                            }
-                            ,
-                            {
-                                color : '34',
-                                a : array[34][2]
-                            }
-                        ],
-                        xkey: 'color',
-                        ykeys: ['a'],
-                        labels: ['Belly']
-                    });
+                else{
+                    $('#colorEntero').html("");
+                    $('#colorLomo').html("");
+                    $('#colorBelly').html("");
+                    $('#colorNCQ').html("");
+
+                    var data1 = [
+                    {
+                        x : '20',
+                        value : array[20][0]
+                    },
+                    {
+                        x : '21',
+                        value : array[21][0]
+                    }
+                    ,
+                    {
+                        x : '22',
+                        value : array[22][0]
+                    }
+                    ,
+                    {
+                        x : '23',
+                        value : array[23][0]
+                    }
+                    ,
+                    {
+                        x : '24',
+                        value : array[24][0]
+                    }
+                    ,
+                    {
+                        x : '25',
+                        value : array[25][0]
+                    }
+                    ,
+                    {
+                        x : '26',
+                        value : array[26][0]
+                    }
+                    ,
+                    {
+                        x : '27',
+                        value : array[27][0]
+                    }
+                    ,
+                    {
+                        x : '28',
+                        value : array[28][0]
+                    }
+                    ,
+                    {
+                        x : '29',
+                        value : array[29][0]
+                    }
+                    ,
+                    {
+                        x : '30',
+                        value : array[30][0]
+                    }
+                    ,
+                    {
+                        x : '31',
+                        value : array[31][0]
+                    }
+                    ,
+                    {
+                        x : '32',
+                        value : array[32][0]
+                    }
+                    ,
+                    {
+                        x : '33',
+                        value : array[33][0]
+                    }
+                    ,
+                    {
+                        x : '34',
+                        value : array[34][0]
+                    }
+                    ];
+                    var data2 = [
+                    {
+                        x : '20',
+                        value : array[20][1]
+                    },
+                    {
+                        x : '21',
+                        value : array[21][1]
+                    }
+                    ,
+                    {
+                        x : '22',
+                        value : array[22][1]
+                    }
+                    ,
+                    {
+                        x : '23',
+                        value : array[23][1]
+                    }
+                    ,
+                    {
+                        x : '24',
+                        value : array[24][1]
+                    }
+                    ,
+                    {
+                        x : '25',
+                        value : array[25][1]
+                    }
+                    ,
+                    {
+                        x : '26',
+                        value : array[26][1]
+                    }
+                    ,
+                    {
+                        x : '27',
+                        value : array[27][1]
+                    }
+                    ,
+                    {
+                        x : '28',
+                        value : array[28][1]
+                    }
+                    ,
+                    {
+                        x : '29',
+                        value : array[29][1]
+                    }
+                    ,
+                    {
+                        x : '30',
+                        value : array[30][1]
+                    }
+                    ,
+                    {
+                        x : '31',
+                        value : array[31][1]
+                    }
+                    ,
+                    {
+                        x : '32',
+                        value : array[32][1]
+                    }
+                    ,
+                    {
+                        x : '33',
+                        value : array[33][1]
+                    }
+                    ,
+                    {
+                        x : '34',
+                        value : array[34][1]
+                    }
+                    ];
+                    var data3 = [
+                    {
+                        x : '20',
+                        value : array[20][2]
+                    },
+                    {
+                        x : '21',
+                        value : array[21][2]
+                    }
+                    ,
+                    {
+                        x : '22',
+                        value : array[22][2]
+                    }
+                    ,
+                    {
+                        x : '23',
+                        value : array[23][2]
+                    }
+                    ,
+                    {
+                        x : '24',
+                        value : array[24][2]
+                    }
+                    ,
+                    {
+                        x : '25',
+                        value : array[25][2]
+                    }
+                    ,
+                    {
+                        x : '26',
+                        value : array[26][2]
+                    }
+                    ,
+                    {
+                        x : '27',
+                        value : array[27][2]
+                    }
+                    ,
+                    {
+                        x : '28',
+                        value : array[28][2]
+                    }
+                    ,
+                    {
+                        x : '29',
+                        value : array[29][2]
+                    }
+                    ,
+                    {
+                        x : '30',
+                        value : array[30][2]
+                    }
+                    ,
+                    {
+                        x : '31',
+                        value : array[31][2]
+                    }
+                    ,
+                    {
+                        x : '32',
+                        value : array[32][2]
+                    }
+                    ,
+                    {
+                        x : '33',
+                        value : array[33][2]
+                    }
+                    ,
+                    {
+                        x : '34',
+                        value : array[34][2]
+                    }
+                    ];
+                    var data4 = [
+                    {
+                        x : '20',
+                        value : array[20][3]
+                    },
+                    {
+                        x : '21',
+                        value : array[21][3]
+                    }
+                    ,
+                    {
+                        x : '22',
+                        value : array[22][3]
+                    }
+                    ,
+                    {
+                        x : '23',
+                        value : array[23][3]
+                    }
+                    ,
+                    {
+                        x : '24',
+                        value : array[24][3]
+                    }
+                    ,
+                    {
+                        x : '25',
+                        value : array[25][3]
+                    }
+                    ,
+                    {
+                        x : '26',
+                        value : array[26][3]
+                    }
+                    ,
+                    {
+                        x : '27',
+                        value : array[27][3]
+                    }
+                    ,
+                    {
+                        x : '28',
+                        value : array[28][3]
+                    }
+                    ,
+                    {
+                        x : '29',
+                        value : array[29][3]
+                    }
+                    ,
+                    {
+                        x : '30',
+                        value : array[30][3]
+                    }
+                    ,
+                    {
+                        x : '31',
+                        value : array[31][3]
+                    }
+                    ,
+                    {
+                        x : '32',
+                        value : array[32][3]
+                    }
+                    ,
+                    {
+                        x : '33',
+                        value : array[33][3]
+                    }
+                    ,
+                    {
+                        x : '34',
+                        value : array[34][3]
+                    }
+                    ];
+                    chart1 = anychart.stick();
+                    chart2 = anychart.stick();
+                    chart3 = anychart.stick();
+                    chart4 = anychart.stick();
+                    var series1 = chart1.stick(data1);
+                    var series2 = chart2.stick(data2);
+                    var series3 = chart3.stick(data3);
+                    var series4 = chart4.stick(data4);
+                    chart1.container(colorEntero);
+                    chart2.container(colorLomo);
+                    chart3.container(colorBelly);
+                    chart4.container(colorNCQ);
+                    chart1.title('Color Entero');
+                    chart2.title('Color Lomo');
+                    chart3.title('Color Belly');
+                    chart4.title('Color NQC');
+                    chart1.background().fill("#3E3D3D");
+                    chart2.background().fill("#3E3D3D");
+                    chart3.background().fill("#3E3D3D");
+                    chart4.background().fill("#3E3D3D");
+                    chart1.draw();
+                    chart2.draw();
+                    chart3.draw();
+                    chart4.draw();
+                } 
                 }
-                else if(nombre=="NCQ"){
-                    new Morris.Bar({
-                    element: id,
-                    resize : true,
-                    data: [
-                        {
-                            color : '20',
-                            a : array[20][3]
-                        },
-                            {
-                                color : '21',
-                                a : array[21][3]
-                            }
-                            ,
-                            {
-                                color : '22',
-                                a : array[22][3]
-                            }
-                            ,
-                            {
-                                color : '23',
-                                a : array[23][3]
-                            }
-                            ,
-                            {
-                                color : '24',
-                                a : array[24][3]
-                            }
-                            ,
-                            {
-                                color : '25',
-                                a : array[25][3]
-                            }
-                            ,
-                            {
-                                color : '26',
-                                a : array[26][3]
-                            }
-                            ,
-                            {
-                                color : '27',
-                                a : array[27][3]
-                            }
-                            ,
-                            {
-                                color : '28',
-                                a : array[28][3]
-                            }
-                            ,
-                            {
-                                color : '29',
-                                a : array[29][3]
-                            }
-                            ,
-                            {
-                                color : '30',
-                                a : array[30][3]
-                            }
-                            ,
-                            {
-                                color : '31',
-                                a : array[31][3]
-                            }
-                            ,
-                            {
-                                color : '32',
-                                a : array[32][3]
-                            }
-                            ,
-                            {
-                                color : '33',
-                                a : array[33][3]
-                            }
-                            ,
-                            {
-                                color : '34',
-                                a : array[34][3]
-                            }
-                        ],
-                        xkey: 'color',
-                        ykeys: ['a'],
-                        labels: ['NQC']
-                    });
-                }
+
+                
+                    
             });
 
-        }
+            $.get('/graficos/filete/ot', {id : id, empresa: empresa}, function(array){
 
-        function donut(id, nombre){
+                if(array=="vacio"){
+                    alert("Aún no se le ha asignado una empresa, no podemos mostrar graficos circulares contacte a soporte técnico para mas detalles");
+                    $('#colorEntero').html("");
+                    $('#colorLomo').html("");
+                    $('#colorBelly').html("");
+                    $('#colorNCQ').html("");
+                }
+                else{
+                    if(array[0] == 0){
+                    M.toast({html : "No hay datos de daños en las últimas 24 horas", classes : "rounded"});
+                    $('#melanosis').html("");
+                    $('#gaping').html("");
+                    $('#hematomas').html("");
+                }
+                else{
+                    var porcMel;
+                    var porcHem;
+                    var porcGap;
 
-            var carga = "<div class='preloader-wrapper big active'>    <div class='spinner-layer spinner-blue-only'>      <div class='circle-clipper left'>        <div class='circle'></div>      </div><div class='gap-patch'>        <div class='circle'></div>      </div><div class='circle-clipper right'>        <div class='circle'></div>      </div>    </div>  </div>";
-            $('#'+id).html("<br><br><h5 class='white-text center'>Cargando grafico</h5><br><br>"+carga);
+                    porcGap = (array[1])/(array[0]/100);
+                    porcMel = (array[2])/(array[0]/100);
+                    porcHem = (array[3])/(array[0]/100);
 
-            $.get('/graficos/filete/ot', {id : id}, function(array){
-                var porcMel;
-                var porcHem;
-                var porcGap;
 
-                console.log(array[0]);
-                console.log(array[1]);
-                console.log(array[2]);
-                console.log(array[3]);
-
-                porcGap = (array[1])/(array[0]/100);
-                porcMel = (array[2])/(array[0]/100);
-                porcHem = (array[3])/(array[0]/100);
-
-                $('#'+id).html("");
-
-                if(nombre == "melanosis"){
-                    $('#'+id).html("Grafico de porcentajes de filetes que presentaron melanosis");
+                    $('#melanosis').html("");
                     Morris.Donut({
-                        element: id,
+                        element: melanosis,
                         data: [
-                            {label: "con melanosis", color: '#BD1111 ',value: porcMel.toFixed(2) , labelColor: '#323DA9 ' },
-                            {label: "sin melanosis", color: '#323DA9 ',value: (100-porcMel).toFixed(2) , labelColor: '#323DA9 ' },
+                            {label: "con melanosis", color: '#BD1111' ,value: (100-porcMel).toFixed(2) , labelColor: '#323DA9' },
+                            {label: "sin melanosis", color: '#323DA9',value: porcMel.toFixed(2) , labelColor: '#323DA9 ' },
+                            
                         ],
                         labelColor: 'white'              
                     }); 
-                }
-                else if(nombre == "hematomas"){
-                    $('#'+id).html("Grafico de porcentajes de filetes que presentaron hematomas");
+
+
+                    $('#hematomas').html("");
                     Morris.Donut({
-                        element: id,
+                        element: hematomas,
                         data: [
-                            {label: "con hematomas", color: '#BD1111 ',value: porcHem.toFixed(2) , labelColor: '#323DA9 ' },
-                            {label: "sin hematomas", color: '#323DA9 ',value: (100-porcHem).toFixed(2) , labelColor: '#323DA9 ' },
+                            {label: "con hematomas", color: '#BD1111',value: (100-porcHem).toFixed(2) , labelColor: '#323DA9 ' },
+                            {label: "sin hematomas", color: '#323DA9',value: porcHem.toFixed(2) , labelColor: '#323DA9 ' },
+                            
                         ],
                         labelColor: 'white'              
                     });
-                }
-                else if(nombre=="gaping"){
-                    $('#'+id).html("Grafico de porcentajes de filetes que presentaron gaping");
+
+
+                    $('#gaping').html("");
                     Morris.Donut({
-                        element: id,
+                        element: gaping,
                         data: [
-                            {label: "Gaping", color: '#BD1111',value: porcGap.toFixed(2) , label: 'con gaping' },
-                            {label: "sin gaping", color: '#323DA9',value: (100-porcGap).toFixed(2) , labelColor: '#323DA9 ' },
+                        {label: "con gaping", color: '#BD1111',value: (100-porcGap).toFixed(2) , labelColor: '#323DA9 ' },
+                            {label: "sin gaping", color: '#323DA9',value: porcGap.toFixed(2) },
+                            
                         ],
                         labelColor: 'white'           
                     });
+                }  
+                }        
 
-                }
+
             });
-            
-        }
 
+            $.get('/graficos/filete/mel',{id : id, empresa: empresa},function(array){
+                if(array == 'vacio'){
+                    M.toast({html : "No hay datos para HEATMAP MELANOSIS en las ultimas 24 horas", classes : "rounded"});
+                }else{
+
+                var total_imagen = canvas.width*canvas.height*4;
+                var aux = 0;
+                var nuevaImagen = [];
+                var arrayAux = [];
+
+                if( array[1].length > 1){
+                    for ( x = 0 ; x < array[1].length ; x++ ){
+                        arrayAux[aux] = JSON.parse(array[1][0]);
+                        aux += 1;
+                    }
+                    var length = arrayAux.length - 1;
+                    for ( x = 1 ; x < arrayAux.length ; x++ ){
+                        for ( i = 0 ; i < 199 ; i++ ){
+                            for ( j = 0 ; j < 600 ; j++ ){
+                                if(arrayAux[0][i][j] != "NaN"){
+                                    arrayAux[0][i][j] = parseInt(arrayAux[0][i][j]);
+                                    arrayAux[0][i][j] += parseInt(arrayAux[x][i][j]);
+                                }
+                                if( x == length){
+
+                                    prom = parseInt(arrayAux[0][i][j])/(length+1);
+                                    arrayAux[0][i][j] =prom;
+
+                                }
+                            }
+                        }
+                    }
+
+                    var json = arrayAux[0];
+                         
+                }
+                else{
+                  var json = JSON.parse(array[1][0]);   
+                }               
+
+                for (x = 0 ; x < 199 ; x++ ) {
+                    for ( i = 0 ; i < 600 ; i++){
+
+                        if (json[x][i] == "NaN"){
+                            nuevaImagen[aux] = '181';
+                            nuevaImagen[aux+1] = '181';
+                            nuevaImagen[aux+2] = '181';
+                            nuevaImagen[aux+3] = '0'; 
+                        }
+
+                        else if (json[x][i] >= 0 && json[x][i] < 5){
+                            nuevaImagen[aux] = '0';
+                            nuevaImagen[aux+1] = '5';
+                            nuevaImagen[aux+2] = '158';
+                            nuevaImagen[aux+3] = '0'; 
+                        }
+
+                        else if (json[x][i] >= 5 && json[x][i] < 10){
+                            nuevaImagen[aux] = '0';
+                            nuevaImagen[aux+1] = '98';
+                            nuevaImagen[aux+2] = '208';
+                            nuevaImagen[aux+3] = '0'; 
+                        }
+
+                        else if (json[x][i] >= 10 && json[x][i] < 15){
+                            nuevaImagen[aux] = '0';
+                            nuevaImagen[aux+1] = '208';
+                            nuevaImagen[aux+2] = '195';
+                            nuevaImagen[aux+3] = '0'; 
+                        }
+
+                        else if (json[x][i] >= 15 && json[x][i] < 20){
+                            nuevaImagen[aux] = '0';
+                            nuevaImagen[aux+1] = '208';
+                            nuevaImagen[aux+2] = '123';
+                            nuevaImagen[aux+3] = '0'; 
+                        }
+
+                        else if (json[x][i] >= 20 && json[x][i] < 25){
+                            nuevaImagen[aux] = '208';
+                            nuevaImagen[aux+1] = '145';
+                            nuevaImagen[aux+2] = '0';
+                            nuevaImagen[aux+3] = '0'; 
+                        }
+
+                        else if (json[x][i] >= 25 && json[x][i] < 30){
+                            nuevaImagen[aux] = '232';
+                            nuevaImagen[aux+1] = '46';
+                            nuevaImagen[aux+2] = '0';
+                            nuevaImagen[aux+3] = '0'; 
+                        }
+
+                        else if (json[x][i] >= 30){
+                            nuevaImagen[aux] = '255';
+                            nuevaImagen[aux+1] = '0';
+                            nuevaImagen[aux+2] = '0';
+                            nuevaImagen[aux+3] = '0'; 
+                        } 
+                
+
+                        aux = aux+4;
+                    }
+                }
+
+                ctx.drawImage(image1,0,0,600,200);
+                const scannedImage = ctx.getImageData(0,0, 600, 199);
         
-        $(document).ready(function(){
+                const scannedData = scannedImage.data;
+                for (i = 0 ; i < scannedData.length ; i+=4){
+                    scannedData[i] = nuevaImagen[i];
+                    scannedData[i+1] = nuevaImagen[i+1];
+                    scannedData[i+2] = nuevaImagen[i+2];
+                }
+                scannedImage.data = scannedData;
+                ctx.putImageData(scannedImage,0,0);
 
-            $('#boton_cambio1').on('click',function(){
-                var empresa = document.getElementById('empresa_select2').value;
-                var jaula_id = document.getElementById('numero_jaula').value;
+            }
+            })
 
-                $.get('/tabla/jaula/', {empresa : empresa}, function(jaulas){
-                    $('#tabla_jaula').html("");
-                    if(jaulas.length == 0){
-                        $('#tabla_jaula').html("<h5>No hay jaulas registradas</h5>");
+            $.get('/graficos/filete/gap',{id : id, empresa: empresa},function(array){
+                
+                if(array == 'vacio'){
+                    M.toast({html : "No hay datos para HEATMAP GAPING en las ultimas 24 horas", classes : "rounded"});
+                }else{
+                var total_imagen2 = canvas2.width*canvas2.height*4;
+                var aux2 = 0;
+                var nuevaImagen2 = [];
+                var arrayAux = [];
+                aux = 0;
+
+                if( array[1].length > 1){
+                    for ( x = 0 ; x < array[1].length ; x++ ){
+                        arrayAux[aux] = JSON.parse(array[1][0]);
+                        aux += 1;
                     }
-                    else{
-                        var flag = 0;
-                        var script = "<table class='white-text'><thead><tr><th>Nombre del centro</th><th>Numero de jaula</th><th></th></tr></thead><tbody>";
-                        $.each(jaulas, function(index,value){
-                            if(value[1] == jaula_id){
-                               script = script + "<tr><td>" + value[2] + "</td><td>" + value[1] + "</td><td><a onclick='borra_jaula("+ value[0]+")'>Borrar Jaula</a></td></tr>";
-                               flag = flag+1; 
-                           }                            
-                        });
-                        if(flag==0){
-                            M.toast({html : "No hay jaulas registradas con los datos introducidos", classes : "rounded"});
+                    var length = arrayAux.length - 1;
+                    for ( x = 1 ; x < arrayAux.length ; x++ ){
+                        for ( i = 0 ; i < 199 ; i++ ){
+                            for ( j = 0 ; j < 600 ; j++ ){
+                                if(arrayAux[0][i][j] != "NaN"){
+                                    arrayAux[0][i][j] = parseInt(arrayAux[0][i][j]);
+                                    arrayAux[0][i][j] += parseInt(arrayAux[x][i][j]); 
+                                }
+                                if( x == length){
+
+                                    prom = parseInt(arrayAux[0][i][j])/(length+1);
+                                    arrayAux[0][i][j] =prom;
+
+                                }
+                            }
                         }
-                        script = script + "</tbody></table>";
-                        $('#tabla_jaula').html(script);
-                    }            
-                });
-            });
-
-            $('#boton_cambio2').on('click',function(){
-                var empresa = document.getElementById('empresa_select3').value;
-                console.log(empresa);
-
-                $.get('/tabla/centro/', {empresa : empresa}, function(centros){
-                    $('#tabla_centro').html("");
-                    console.log(centros);
-                    if(centros.length == 0){
-                        $('#tabla_centro').html("<h5>No hay centros registradas</h5>");
                     }
+                    var json = arrayAux[0];       
+                }         
+
+                var json2 = JSON.parse(array[1][0]);          
+
+                for (x = 0 ; x < 199 ; x++ ) {
+                    for ( i = 0 ; i < 600 ; i++){
+
+                        if (json2[x][i] == "NaN"){
+                            nuevaImagen2[aux2] = '181';
+                            nuevaImagen2[aux2+1] = '181';
+                            nuevaImagen2[aux2+2] = '181';
+                            nuevaImagen2[aux2+3] = '0'; 
+                        }
+
+                        else if (json2[x][i] >= 0 && json2[x][i] < 5){
+                            nuevaImagen2[aux2] = '0';
+                            nuevaImagen2[aux2+1] = '5';
+                            nuevaImagen2[aux2+2] = '158';
+                            nuevaImagen2[aux2+3] = '0'; 
+                        }
+
+                        else if (json2[x][i] >= 5 && json2[x][i] < 10){
+                            nuevaImagen2[aux2] = '0';
+                            nuevaImagen2[aux2+1] = '98';
+                            nuevaImagen2[aux2+2] = '208';
+                            nuevaImagen2[aux2+3] = '0'; 
+                        }
+
+                        else if (json2[x][i] >= 10 && json2[x][i] < 15){
+                            nuevaImagen2[aux2] = '0';
+                            nuevaImagen2[aux2+1] = '208';
+                            nuevaImagen2[aux2+2] = '195';
+                            nuevaImagen2[aux2+3] = '0'; 
+                        }
+
+                        else if (json2[x][i] >= 15 && json2[x][i] < 20){
+                            nuevaImagen2[aux2] = '0';
+                            nuevaImagen2[aux2+1] = '208';
+                            nuevaImagen2[aux2+2] = '123';
+                            nuevaImagen2[aux2+3] = '0'; 
+                        }
+
+                        else if (json2[x][i] >= 20 && json2[x][i] < 25){
+                            nuevaImagen2[aux2] = '208';
+                            nuevaImagen2[aux2+1] = '145';
+                            nuevaImagen2[aux2+2] = '0';
+                            nuevaImagen2[aux2+3] = '0'; 
+                        }
+
+                        else if (json2[x][i] >= 25 && json2[x][i] < 30){
+                            nuevaImagen2[aux2] = '232';
+                            nuevaImagen2[aux2+1] = '46';
+                            nuevaImagen2[aux2+2] = '0';
+                            nuevaImagen2[aux2+3] = '0'; 
+                        }
+
+                        else if (json2[x][i] >= 30){
+                            nuevaImagen2[aux2] = '255';
+                            nuevaImagen2[aux2+1] = '0';
+                            nuevaImagen2[aux2+2] = '0';
+                            nuevaImagen2[aux2+3] = '0'; 
+                        } 
+                
+
+                        aux2 = aux2+4;
+                    }
+                }
+
+                ctx2.drawImage(image2,0,0,600,200);
+                const scannedImage2 = ctx2.getImageData(0,0, 600, 199);
+        
+                const scannedData2 = scannedImage2.data;
+                for (i = 0 ; i < scannedData2.length ; i+=4){
+                    scannedData2[i] = nuevaImagen2[i];
+                    scannedData2[i+1] = nuevaImagen2[i+1];
+                    scannedData2[i+2] = nuevaImagen2[i+2];
+                }
+                scannedImage2.data = scannedData2;
+                ctx2.putImageData(scannedImage2,0,0);
+            }   
+
+            })
+            
+            $.get('/graficos/filete/hem',{id : id, empresa: empresa},function(array){
+
+                
+                if(array == 'vacio'){
+                    M.toast({html : "No hay datos para HEATMAP HEMATOMAS en las ultimas 24 horas", classes : "rounded"});
+                }else{
+                    var total_imagen3 = canvas3.width*canvas3.height*4;
+                    var aux3 = 0;
+                    var nuevaImagen3 = [];
+                    var arrayAux = [];
+                    aux = 0;
+
+                    if( array[1].length > 1){
+                        for ( x = 0 ; x < array[1].length ; x++ ){
+                            arrayAux[aux] = JSON.parse(array[1][0]);
+                            aux += 1;
+                        }
+                        var length = arrayAux.length - 1;
+                        for ( x = 1 ; x < arrayAux.length ; x++ ){
+                            for ( i = 0 ; i < 199 ; i++ ){
+                                for ( j = 0 ; j < 600 ; j++ ){
+                                    if(arrayAux[0][i][j] != "NaN"){
+                                        arrayAux[0][i][j] = parseInt(arrayAux[0][i][j]);
+                                        arrayAux[0][i][j] += parseInt(arrayAux[x][i][j]); 
+                                    }
+                                    if( x == length){
+
+                                        prom = parseInt(arrayAux[0][i][j])/(length+1);
+                                        arrayAux[0][i][j] =prom;
+                                    }
+                                }
+                            }
+                        }
+                        var json3 = arrayAux[0];       
+                    }               
+
                     else{
-                        var flag = 0;
-                        var script = "<table class='white-text'><thead><tr><th>Nombre del centro</th><th>Ubicación</th><th></th></tr></thead><tbody>";
-                        $.each(centros, function(index,value){
-                            script = script + "<tr><td>" + value[1] + "</td><td>" + value[2] + "</td><td><a onclick='borra_centro("+ value[0]+")'>Borrar Centro</a></td></tr>";
-                            flag = flag+1;                           
-                        });
-                        if(flag==0){
-                            M.toast({html : "No hay centros registradas con los datos introducidos", classes : "rounded"});
+                        var json3 = JSON.parse(array[1][0]); 
+                    }
+                
+
+                    for (x = 0 ; x < 199 ; x++ ) {
+                        for ( i = 0 ; i < 600 ; i++){
+
+                            if (json3[x][i] == "NaN"){
+                                nuevaImagen3[aux3] = '181';
+                                nuevaImagen3[aux3+1] = '181';
+                                nuevaImagen3[aux3+2] = '181';
+                                nuevaImagen3[aux3+3] = '0'; 
+                            }
+
+                            else if(json3[x][i]>=0 && json3[x][i]<=10){
+                                nuevaImagen3[aux3] = '0';
+                                nuevaImagen3[aux3+1] = '5';
+                                nuevaImagen3[aux3+2] = '158';
+                                nuevaImagen3[aux3+3] = '0'; 
+                            }
+
+                            else if (json3[x][i]>10 && json3[x][i]<=20){
+                                nuevaImagen3[aux3] = '0';
+                                nuevaImagen3[aux3+1] = '6';
+                                nuevaImagen3[aux3+2] = '201';
+                                nuevaImagen3[aux3+3] = '0'; 
+                            }
+                            else if (json3[x][i]>20 && json3[x][i]<=30){
+                                nuevaImagen3[aux3] = '0';
+                                nuevaImagen3[aux3+1] = '76';
+                                nuevaImagen3[aux3+2] = '201';
+                                nuevaImagen3[aux3+3] = '0'; 
+                            }
+                            else if (json3[x][i]>30 && json3[x][i]<=40){
+                                nuevaImagen3[aux3] = '0';
+                                nuevaImagen3[aux3+1] = '113';
+                                nuevaImagen3[aux3+2] = '201';
+                                nuevaImagen3[aux3+3] = '0'; 
+                            }
+                            else if (json3[x][i]>40 && json3[x][i]<=50){
+                                nuevaImagen3[aux3] = '0';
+                                nuevaImagen3[aux3+1] = '174';
+                                nuevaImagen3[aux3+2] = '201';
+                                nuevaImagen3[aux3+3] = '0'; 
+                            }
+                            else if (json3[x][i]>50 && json3[x][i]<=60){
+                                nuevaImagen3[aux3] = '139';
+                                nuevaImagen3[aux3+1] = '236';
+                                nuevaImagen3[aux3+2] = '0';
+                                nuevaImagen3[aux3+3] = '0'; 
+                            }
+                            else if (json3[x][i]>60 && json3[x][i]<=70){
+                                nuevaImagen3[aux3] = '236';
+                                nuevaImagen3[aux3+1] = '150';
+                                nuevaImagen3[aux3+2] = '0';
+                                nuevaImagen3[aux3+3] = '0'; 
+                            }
+                            else if (json3[x][i]>70 && json3[x][i]<=80){
+                                nuevaImagen3[aux3] = '0';
+                                nuevaImagen3[aux3+1] = '236';
+                                nuevaImagen3[aux3+2] = '107';
+                                nuevaImagen3[aux3+3] = '0'; 
+                            }
+                            else if (json3[x][i]>80 && json3[x][i]<=90){
+                                nuevaImagen3[aux3] = '136';
+                                nuevaImagen3[aux3+1] = '236';
+                                nuevaImagen3[aux3+2] = '0'; 
+                                nuevaImagen3[aux3+3] = '0';
+                            }
+                            else if (json3[x][i]>90 && json3[x][i]<=100){
+                                nuevaImagen3[aux3] = '204';
+                                nuevaImagen3[aux3+1] = '236';
+                                nuevaImagen3[aux3+2] = '0';
+                                nuevaImagen3[aux3+3] = '0'; 
+                            }
+                            else if (json3[x][i]>100 && json3[x][i]<=110){
+                                nuevaImagen3[aux3] = '236';
+                                nuevaImagen3[aux3+1] = '146';
+                                nuevaImagen3[aux3+2] = '0';
+                                nuevaImagen3[aux3+3] = '0'; 
+                            }
+                            else if (json3[x][i]>110 && json3[x][i]<=120){
+                                nuevaImagen3[aux3] = '236';
+                                nuevaImagen3[aux3+1] = '104';
+                                nuevaImagen3[aux3+2] = '0';
+                                nuevaImagen3[aux3+3] = '0'; 
+                            }
+                            else if (json3[x][i]>120 && json3[x][i]<=130){
+                                nuevaImagen3[aux3] = '236';
+                                nuevaImagen3[aux3+1] = '57';
+                                nuevaImagen3[aux3+2] = '0';
+                                nuevaImagen3[aux3+3] = '0'; 
+                            }
+                            else if (json3[x][i]>130){
+                                nuevaImagen3[aux3] = '236';
+                                nuevaImagen3[aux3+1] = '0';
+                                nuevaImagen3[aux3+2] = '0';
+                                nuevaImagen3[aux3+3] = '0'; 
+                            } 
+                
+
+                            aux3 = aux3+4;
                         }
-                        script = script + "</tbody></table>";
-                        $('#tabla_centro').html(script);
-                    }            
-                });
-            });
+                    }
 
-            $('#empresa_select').delay(200).on('change', function(){
-                var empresa_id = $(this).val();
+                    ctx3.drawImage(image3,0,0,600,200);
+                    const scannedImage3 = ctx3.getImageData(0,0, 600, 199);
+        
+                    const scannedData3 = scannedImage3.data;
+                    for (i = 0 ; i < scannedData3.length ; i+=4){
+                        scannedData3[i] = nuevaImagen3[i];
+                        scannedData3[i+1] = nuevaImagen3[i+1];
+                        scannedData3[i+2] = nuevaImagen3[i+2];
+                    }
+                    scannedImage3.data = scannedData3;
+                    ctx3.putImageData(scannedImage3,0,0);
+                    }
+                })
 
-                if($.trim(empresa_id)!=""){
-                    $.get('/centro/obt/', {empresa_id : empresa_id}, function(centros){
-                        $('#centro_select').empty();
-                        if(centros.length == 0){
-                            $('#centro_select').append("<option value='' >No hay centros registrados</option>");
-                        }
-                        else{
-                            $('#centro_select').append("<option value='' >--Listado de centros--</option>");
-
-                            $.each(centros, function(index,value){
-                                $('#centro_select').append("<option value='"+  index +"'>"+ value[0] +", "+ value[1] +"</option>");
-                            });
-                        }
-                        
-
-                    });
-                }
-            });
-
-            $('#centro_select').delay(200).on('change', function(){
-                var centro_id = $(this).val();
-
-                if($.trim(centro_id)!=""){
-                    $.get('/jaula/obt/', {centro_id : centro_id}, function(jaulas){
-                        $('#jaula_select').empty();
-                        if(jaulas.length == 0){
-                            $('#jaula_select').append("<option value='' >No hay jaulas registradas</option>");
-                        }
-                        else{
-                            $('#jaula_select').append("<option value='' >--Listado de Jaulas--</option>");
-
-                            $.each(jaulas, function(index,value){
-                                $('#jaula_select').append("<option value='"+  index +"'>n: "+ value[0] +"</option>");
-                            });
-                        }
-                        
-
-                    });
-                }
-            });
-
-            $('#empresa_select').delay(200).on('change', function(){
-                var empresa_id = $(this).val();
-                var string = "<br><br><hr><br>";
-
-                if($.trim(empresa_id)!=""){
-                    $.get('/empresa/obtME', {empresa_id : empresa_id}, function(centros){
-                        $('#maquinas').html("");
-                        if(centros.length == 0){
-                        }
-                        else{
-                            $.each(centros, function(index,value){
-                                string = string + "<div class='col s4'><div class='card grey darken-4 z-depth-3'><div class='card-content white-text'><span class='card-title'>"+value[2]+"</span><table><thead></thead><tbody><tr><td class='white-text'><strong>Tipo:</strong></td><td class='white-text'>"+ value[0] +"</td></tr><tr><td class='white-text'><strong>Modelo:</strong></td><td class='white-text'>"+ value[1] +"</td></tr><tr><td class='white-text'><strong>Estado:</strong></td>@if("+ value[3] +" == 'on')<td class='green-text'>"+ value[3] +"</td>@else<td class='red-text'>"+ value[3] +"</td>@endif                      </tr>      </tbody></table></div><div class='card-action'><a class='blue btn right' onclick='construccion()'><i class='material-icons right'>insert_chart</i>Desplegar grafico</a><br><br>  </div> </div></div>";
-                            });
-
-                            $('#maquinas').html(string);
-                        }
-                        
-
-                    });
-                }
-            });
-
-            $('#centro_select').delay(200).on('change', function(){
-                var centro_id = $(this).val();
-                var string = "<br><br><hr><br>";
-
-                if($.trim(centro_id)!=""){
-                    $.get('/empresa/obtMC', {centro_id : centro_id}, function(centros){
-                        $('#maquinas').html("");
-                        if(centros.length == 0){
-                        }
-                        else{
-                            $.each(centros, function(index,value){
-                                string = string + "<div class='col s4'><div class='card grey darken-4 z-depth-3'><div class='card-content white-text'><span class='card-title'>"+value[2]+"</span><table><thead></thead><tbody><tr><td class='white-text'><strong>Tipo:</strong></td><td class='white-text'>"+ value[0] +"</td></tr><tr><td class='white-text'><strong>Modelo:</strong></td><td class='white-text'>"+ value[1] +"</td></tr><tr><td class='white-text'><strong>Estado:</strong></td>@if("+ value[3] +" == 'on')<td class='green-text'>"+ value[3] +"</td>@else<td class='red-text'>"+ value[3] +"</td>@endif                      </tr>      </tbody></table></div><div class='card-action'><a class='blue btn right' onclick='construccion()'><i class='material-icons right'>insert_chart</i>Desplegar grafico</a></div> </div></div>";
-                            });
-
-                            $('#maquinas').html(string);
-                        }
-                        
-
-                    });
-                }
-            });
-
-            $('#jaula_select').delay(200).on('change', function(){
-                var jaula_id = $(this).val();
-                var string = "<br><br><hr><br>";
-
-                if($.trim(jaula_id)!=""){
-                    $.get('/empresa/obtMJ', {jaula_id : jaula_id}, function(centros){
-                        $('#maquinas').html("");
-                        if(centros.length == 0){
-                        }
-                        else{
-                            $.each(centros, function(index,value){
-                                string = string + "<div class='col s4'><div class='card grey darken-4 z-depth-3'><div class='card-content white-text'><span class='card-title'>"+value[2]+"</span><table><thead></thead><tbody><tr><td class='white-text'><strong>Tipo:</strong></td><td class='white-text'>"+ value[0] +"</td></tr><tr><td class='white-text'><strong>Modelo:</strong></td><td class='white-text'>"+ value[1] +"</td></tr><tr><td class='white-text'><strong>Estado:</strong></td>@if("+ value[3] +" == 'on')<td class='green-text'>"+ value[3] +"</td>@else<td class='red-text'>"+ value[3] +"</td>@endif                      </tr>      </tbody></table></div><div class='card-action'><a class='blue btn right' onclick='construccion()'><i class='material-icons right'>insert_chart</i>Desplegar grafico</a>></div> </div></div>";
-                            });
-
-                            $('#maquinas').html(string);
-                        }
-                        
-
-                    });
-                }
-            });
-        });
+            }
 
     function borra_jaula(id){
         var opt1 = confirm("¿Está seguro que desea eliminar por completo esta jaula?");
@@ -800,7 +1026,101 @@
             }
         }
     }
-    </script>
+
+    function mediana(array, valorMedio, tipo){
+        var aux=0;
+        var valMediana;
+        i = 20;
+
+        if(tipo == 'entero'){
+            while (i < 34){
+                aux += array[i][0];
+                if(aux > valorMedio){
+                    valMediana = i;
+                    i = 34;
+                }
+                i++;
+            }
+            return valMediana;
+        }
+
+        else if(tipo == 'lomo'){
+            while (i < 34){
+                aux += array[i][1];
+                if(aux > valorMedio){
+                    valMediana = i;
+                    i = 34;
+                }
+                i++;
+            }
+            return valMediana;
+        }
+
+        else if(tipo == 'belly'){
+            while (i < 34){
+                aux += array[i][2];
+                if(aux > valorMedio){
+                    valMediana = i;
+                    i = 34;
+                }
+                i++;
+            }
+            return valMediana;
+        }
+
+        if(tipo == 'ncq'){
+            while (i < 34){
+                aux += array[i][3];
+                if(aux > valorMedio){
+                    valMediana = i;
+                    i = 34;
+                }
+                i++;
+            }
+            return valMediana;
+        }
+    }
+    
+    function cambia_fecha(val){
+        if(val==1){
+            return "Enero";
+        }
+        else if(val==2){
+            return "Febrero";
+        }
+        else if(val==3){
+            return "Marzo";
+        }
+        else if(val==4){
+            return "Abril";
+        }
+        else if(val==5){
+            return "Mayo";
+        }
+        else if(val==6){
+            return "Junio";
+        }
+        else if(val==7){
+            return "Julio";
+        }
+        else if(val==8){
+            return "Agosto";
+        }
+        else if(val==9){
+            return "Septiembre";
+        }
+        else if(val==10){
+            return "Octubre";
+        }
+        else if(val==11){
+            return "Noviembre";
+        }
+        else if(val==12){
+            return "Diciembre";
+        }
+    }
+
+</script>
 @endsection
 
 

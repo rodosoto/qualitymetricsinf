@@ -31,6 +31,10 @@ class MedicionFiletes extends Migration
             $table->integer('ptosMel');
             $table->double('areaHem');
             $table->integer('puntosHem');
+            $table->double('longHem');
+            $table->double('longMel');
+            $table->double('longGap');
+            $table->integer('empresa');
             $table->timestamps();
 
         });

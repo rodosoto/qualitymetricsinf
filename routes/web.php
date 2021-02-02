@@ -26,6 +26,8 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::get('/reporte_pdf', [InformesController::class , 'reporte_pdf']);
+
 Route::get('/datos', [ApiController::class, 'recibe'])->name('api.rest');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', [CreaObjeto::class, 'dashboard'])->name('dashboard');
@@ -86,9 +88,46 @@ Route::get('/graficos/filete/ce', [GraficosController::class, 'graficosBarra'] )
 
 Route::get('/graficos/filete/ot', [GraficosController::class, 'graficosDonut'] )->name('graficos.donut');
 
+Route::get('/graficos/filete/hem', [GraficosController::class, 'mapHematomas'] )->name('graficos.hem');
+
+Route::get('/graficos/filete/gap', [GraficosController::class, 'mapGaping'] )->name('graficos.gap');
+
+Route::get('/graficos/filete/mel', [GraficosController::class, 'mapMelanosis'] )->name('graficos.mel');
+
 Route::get('informes/excel', [InformesController::class , 'medicion_filete'])->name('informes.filete');
 
 Route::get('informes/pdf', [InformesController::class , 'medicion_filetePDF'])->name('informes.filetePDF');
+
+Route::get('/reportes', [GeneralController::class, 'reportes'])->name('reportes');
+
+Route::get('/reportes/fecha', [GeneralController::class, 'rellena_fecha'])->name('reportes.fecha');
+
+Route::get('/reportes/mes', [GeneralController::class, 'rellena_mes'])->name('reportes.mes');
+
+Route::get('/reportes/dia', [GeneralController::class, 'rellena_dia'])->name('reportes.dia');
+
+Route::get('/reportes/centros', [GeneralController::class, 'rellena_centro'])->name('reportes.centro');
+
+Route::get('/reportes/centros2', [GeneralController::class, 'rellena_centro2'])->name('reportes.centro2');
+
+Route::get('/reportes/NombreCentros', [GeneralController::class, 'NombreCentro'])->name('reportes.Ncentro');
+
+Route::get('/reportes/jaulas', [GeneralController::class, 'rellena_jaula'])->name('reportes.jaulas');
+
+Route::get('/reportes/Limjaulas', [GeneralController::class, 'limitaPorJaula'])->name('reportes.limitaJaula');
+
+Route::get('/reportes/donutGen', [GeneralController::class, 'donutGeneral'])->name('reportes.donutGen');
+
+Route::get('/reportes/donutAnio', [GeneralController::class, 'donutAnio'])->name('reportes.donutAnio');
+
+Route::get('/reportes/donutMes', [GeneralController::class, 'donutMes'])->name('reportes.donutMes');
+
+Route::get('/reportes/donutDia', [GeneralController::class, 'donutDia'])->name('reportes.donutDia');
+
+Route::get('/reportes/donutCentro', [GeneralController::class, 'donutCentro'])->name('reportes.donutCentro');
+
+Route::get('/reportes/donutJaula', [GeneralController::class, 'donutJaula'])->name('reportes.donutJaula');
+
 
 
 

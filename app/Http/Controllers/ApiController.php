@@ -19,6 +19,7 @@ class ApiController extends Controller
 
     	$centro_json = $request->centro;
     	$jaula_json = $request->jaula;
+        $empresa = 
     		
     	//creacion de objetos para hacer consulta eloquent
     	$centro = new Centro();
@@ -26,23 +27,23 @@ class ApiController extends Controller
 
     	$centro = Centro::select('id')->where('nombre_centro', $centro_json)->get();
     	if(empty($centro)){
-    		return json_encode(array(
-    			'status' => 'error'
-    		));
+    		$centro_add = new Centro();
+            $centro->nombre_centro = $centro_json;
+            $centro_add->save();
     	}
 
     	$jaula = Jaula::select('id')->where('numero',$jaula_json)->get();
     	if(empty($jaula)){
-    		return json_encode(array(
-    			'status' => 'error'
-    		));
+    		$jaula_add = new Jaula();
+            $centro->numero = $jaula_json;
+            $jaula_add->save();
     	}
 
     	//sectionCod ultimos 3 digitos son de la maquina
 
     	$sectionCod = $request->input('sectionCod');
     	$caracteres = preg_split('//', $sectionCod, -1, PREG_SPLIT_NO_EMPTY);
-    	$maquina = $caracteres[3].$caracteres[4].$caracteres[5];
+    	$maquina = $caracteres[4].$caracteres[5].$caracteres[6];
     	if($caracteres[0]=='f' || $caracteres[0]=='F'){ 
     		
     		//Creacion de objeto medicion filete
@@ -63,7 +64,6 @@ class ApiController extends Controller
             $medicion->ptosMel = $request->ptosMel; 
             $medicion->areaHem = $request->areaHem; 
             $medicion->puntosHem = $request->ptosHem; 
-            $medicion->mapaCoordFilete = json_encode($request->mapaCoord);
 
             if($medicion->save()){
             	$med_maquina = new Medicionmaquinasf();
