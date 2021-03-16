@@ -79,8 +79,8 @@
 
 <ul id="dropdown6" class="dropdown-content grey darken-4 white-text">
   <li><a class="white-text" href="{{ route('profile.show') }}">Ver perfil</a></li>
-  <li><a class="white-text modal-trigger" href="#modalinformes">Visualización rápida</a></li>
-  <li><a class="white-text modal-trigger" href="{{ route('reportes') }}">Reporte</a></li>
+  <li><a class="white-text modal-trigger" href="#modalinformes">Reporte</a></li>
+  <li><a class="white-text modal-trigger" href="{{ route('reportes') }}">Visualización rápida</a></li>
   <form method="POST" action="{{ route('logout') }}">
     @csrf
     <li><a class="white-text" href="{{ route('logout') }}" onclick="event.preventDefault();

@@ -84,7 +84,7 @@ $emp = Auth::user()->empresa;
 
 	var empresa = '{{ Auth::user()->empresa}}';
 
-	var data = "<br><br><br><br><br><br>			<h4 class='white-text'>Cargando gráfico</h4>			<br><br><br>			<div class='preloader-wrapper big active'>      			<div class='spinner-layer spinner-blue'>        			<div class='circle-clipper left'>          				<div class='circle'></div>        			</div>        			<div class='gap-patch'>          				<div class='circle'></div>        			</div>        			<div class='circle-clipper right'>          				<div class='circle'></div>        			</div>      			</div>			</div>";
+	var data = "<br><br><br><br><br><br><h4 class='white-text'>Cargando gráfico</h4><br><br><br><div class='preloader-wrapper big active'><div class='spinner-layer spinner-blue'><div class='circle-clipper left'><div class='circle'></div></div><div class='gap-patch'><div class='circle'></div></div><div class='circle-clipper right'><div class='circle'></div></div></div></div>";
 
 	function mediana(array, valorMedio, tipo){
 		var aux=0;
@@ -370,7 +370,6 @@ $emp = Auth::user()->empresa;
 				if (anio == ''){
 					chart.title("Distribución de color");
 				}
-
 				if (anio != ''){
 					if(mes==''){
 						chart.title("Distribución de color "+anio);
@@ -447,7 +446,6 @@ $emp = Auth::user()->empresa;
 	}
 	function dibuja_torta(container,nombre, total, porc){
 		anychart.onDocumentReady(function () {
-
 			var data = [
 				
 				{
@@ -665,29 +663,18 @@ $emp = Auth::user()->empresa;
 			if(array[1]==undefined){
 				$('#grafico').html("");
 				alert("No tenemos informacion para su empresa actual");
+
 			}
 			else{
+				$('#grafico').html("");
 				$('#anio').empty();
 				$('#anio').append("<option selected disabled>-- Año de cosecha --</option>");
 				for ( i = 0 ; i < array[1].length ; i++ ){
 					$('#anio').append("<option onclick='mes('"+  array[1][i] +"'')' value='"+  array[1][i] +"'>"+ array[1][i]+"</option>");
 				}
 				var mitad = array[0][0]/2;
-				dibuja_grafico(array,mitad, '', '', '', '', '');
 			}
 			
-		});
-		$.get('/reportes/donutGen',{empresa : empresa}, function(array){
-			if(array!=undefined){
-				dibuja_torta(torta1,'Gaping',array[0],array[1]);
-				dibuja_torta(torta2,'Melanosis',array[0],array[2]);
-				dibuja_torta(torta3,'Hematomas',array[0],array[3]);
-			}
-			else{
-				$('#torta1').html('');
-				$('#torta2').html('');
-				$('#torta3').html('');
-			}
 		});
 	}
 	fecha();

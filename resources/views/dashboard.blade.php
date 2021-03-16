@@ -101,26 +101,58 @@
 
 <div id="modalinformes" class="modal grey darken-4">
   <div class="modal-content col">
-    <h6 class="white-text">Selecciona el informe que deseas descargar</h6>
+    <h6 class="white-text">Selecciona fecha de inicio</h6>
+    <form name="formulario" action="{{ route('reporte_pdf') }}" method="get">
+        @csrf
+        <div class="input-field col s12">
+            <input type="text" name="empresa" value="{{ Auth::user()->empresa }}" hidden>            
+        </div>
+        <div class="input-field col s12">
+            <select class="browser-default" name="anio1" id="anio1">
+            <option selected disabled>-- Año --</option>          
+            </select>
+        </div>
+        <div class="input-field col s12">
+            <select class="browser-default" name="mes1" id="mes1">
+                <option selected disabled>-- mes --</option>        
+            </select>
+        </div>
+        <div class="input-field col s12">
+            <select class="browser-default" name="dia1" id="dia1">
+                <option selected disabled>-- dia --</option>        
+            </select>
+        </div>   
+        <div class="input-field col s12">
+             <h6 class="white-text">Selecciona fecha de termino</h6>
+        </div>
+        <div class="input-field col s12">
+            <select class="browser-default" name="anio2" id="anio2">
+            <option selected disabled>-- Año --</option>           
+            </select>
+        </div>
+        <div class="input-field col s12">
+            <select class="browser-default" name="mes2" id="mes2">
+                <option selected disabled>-- mes --</option>        
+            </select>
+        </div>
+        <div class="input-field col s12">
+            <select class="browser-default" name="dia2" id="dia2">
+                <option selected disabled>-- dia --</option>        
+            </select>
+        </div>
     <table>
-        <thead>
-            <tr>
-                <th class="white-text">Informe</th>
-                <th class="white-text">Formato</th>                
-            </tr>
-        </thead>
         <tbody>
             <tr>
-                <td class="white-text">Mediciones de filetes ultimas 24 horas</td>
-                <td class="white-text"><a href="{{ route('informes.filete') }}">Excel</a></td>
-                
-            </tr>
-            <tr>
-                <td class="white-text">Mediciones de filetes ultimas 24 horas</td>
-                <td class="white-text"><a href="{{ route('informes.filetePDF') }}">PDF</a></td>
+                <td class="center">
+                    <a onclick="submit()" target="_blank" class="blue btn"><i class="material-icons left">picture_as_pdf</i>Desgargar PDF</a>        
+                </td>
+                <td class="center">
+                    <a class="blue btn"><i class="material-icons left">view_list</i>Descargar Excel</a>        
+                </td>
             </tr>
         </tbody>
     </table>
+    </form>
     <div class="modal-footer grey darken-3" hidden>
 
       <button class="modal-close blue btn" id="cierra_modal_3">
@@ -138,10 +170,145 @@
   <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
   <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
 
-
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <script type="text/javascript">
-    
+
+    function submit(){
+        document.formulario.submit();
+        console.log('siu')
+    }
+
+    var empresa = '{{ Auth::user()->empresa }}';
+
+    //rellenamos los centros para la seleccionde informe rapido
+
+    function rellena_anio(){
+
+
+        $.get('/reporterapido/anio1',{ empresa:empresa}, function(array){
+
+            $('#anio1').empty();
+            $('#anio1').append("<option selected disabled>-- Año --</option>");
+            for ( i = 0 ; i < array[3] ; i++ ){
+                $('#anio1').append("<option value='"+  array[0][i] +"'>"+ array[0][i]+"</option>");
+            }
+            if( array[3] == 0){
+                $('#anio1').empty();
+                $('#anio1').append("<option selected disabled>No hay datos</option>");
+            }
+        });
+    }
+    rellena_anio();
+
+    //comenzamos a actualizar los select en base a las selecciones anteriores
+
+
+    $('#anio1').on('change',function(){
+
+        
+        anio = this.value;
+        $('#mes1').empty();
+        $('#mes1').append("<option selected disabled>-- mes --</option>");
+        $('#mes2').empty();
+        $('#mes2').append("<option selected disabled>-- mes --</option>");
+        $('#dia1').empty();
+        $('#dia1').append("<option selected disabled>-- dia --</option>");
+        $('#dia2').empty();
+        $('#dia2').append("<option selected disabled>-- dia --</option>");
+
+
+        $.get('/reporterapido/mes1',{ empresa:empresa, anio : anio}, function(array){
+
+
+            $('#mes1').empty();
+            $('#mes1').append("<option selected disabled>-- mes --</option>");
+            for ( i = 0 ; i < array[3] ; i++ ){
+                $('#mes1').append("<option value='"+  array[0][i] +"'>"+ array[0][i]+"</option>");
+            }
+            if( array[3] == 0){
+                $('#mes1').empty();
+                $('#mes1').append("<option selected disabled>No hay datos para este centro</option>");
+            }
+        });
+
+        $.get('/reporterapido/anio2',{ empresa:empresa, anio:anio}, function(array){
+
+            $('#anio2').empty();
+            $('#anio2').append("<option selected disabled>-- Año --</option>");
+            for ( i = 0 ; i < array[3] ; i++ ){
+                $('#anio2').append("<option value='"+  array[0][i] +"'>"+ array[0][i]+"</option>");
+            }
+            if( array[3] == 0){
+                $('#anio2').empty();
+                $('#anio2').append("<option selected disabled>No hay datos para este centro</option>");
+            }
+        });
+    });
+
+    $('#mes1').on('change',function(){
+
+        anio = document.getElementById('anio1').value;
+        mes = this.value;
+        $('#dia2').empty();
+        $('#dia2').append("<option selected disabled>-- dia --</option>");
+        $('#dia1').empty();
+        $('#dia1').append("<option selected disabled>-- dia --</option>");
+
+
+        $.get('/reporterapido/dia1',{ empresa:empresa, anio : anio, mes : mes}, function(array){
+
+            $('#dia1').empty();
+            $('#dia1').append("<option selected disabled>-- dia --</option>");
+            for ( i = 0 ; i < array[3] ; i++ ){
+                $('#dia1').append("<option value='"+  array[0][i] +"'>"+ array[0][i]+"</option>");
+            }
+            if( array[3] == 0){
+                $('#dia1').empty();
+                $('#dia1').append("<option selected disabled>No hay datos para este centro</option>");
+            }
+        });
+
+        $.get('/reporterapido/mes2',{ empresa:empresa, anio : anio, mes:mes}, function(array){
+
+
+            $('#mes2').empty();
+            $('#mes2').append("<option selected disabled>-- mes --</option>");
+            for ( i = 0 ; i < array[3] ; i++ ){
+                $('#mes2').append("<option value='"+  array[0][i] +"'>"+ array[0][i]+"</option>");
+            }
+            if( array[3] == 0){
+                $('#mes2').empty();
+                $('#mes2').append("<option selected disabled>No hay datos para este centro</option>");
+            }
+        });
+    });
+
+    $('#dia1').on('change',function(){
+
+        
+        anio = document.getElementById('anio1').value;
+        mes = document.getElementById('mes1').value;
+        dia = this.value;
+
+        $('#dia2').empty();
+        $('#dia2').append("<option selected disabled>-- dia --</option>");
+
+
+        $.get('/reporterapido/dia2',{ empresa:empresa, anio : anio, mes : mes, dia:dia}, function(array){
+
+            console.log(array)
+
+            $('#dia2').empty();
+            $('#dia2').append("<option selected disabled>-- dia --</option>");
+            for ( i = 0 ; i < array[3] ; i++ ){
+                $('#dia2').append("<option value='"+  array[0][i] +"'>"+ array[0][i]+"</option>");
+            }
+            if( array[3] == 0){
+                $('#dia2').empty();
+                $('#dia2').append("<option selected disabled>No hay datos para este centro</option>");
+            }
+        });
+    });    
 
     const canvas = document.getElementById('canvas1');
     const ctx = canvas.getContext('2d');

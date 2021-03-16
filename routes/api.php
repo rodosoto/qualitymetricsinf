@@ -2,6 +2,15 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
+use App\Http\Controllers\GeneralController;
+use App\Http\Controllers\CreaObjeto;
+use App\Http\Controllers\CreaEmpresaController;
+use App\Http\Controllers\UbicacionController;
+use App\Http\Controllers\GraficosController;
+use App\Http\Controllers\InformesController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +26,5 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/datos', [ApiController::class, 'recibe'])->name('api.rest');

@@ -35,6 +35,7 @@ class MedicionFiletes extends Migration
             $table->double('longMel');
             $table->double('longGap');
             $table->integer('empresa');
+            $table->integer('maquina');
             $table->timestamps();
 
         });

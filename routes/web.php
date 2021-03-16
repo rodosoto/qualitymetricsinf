@@ -22,13 +22,19 @@ use App\Http\Controllers\InformesController;
 |
 */
 
+
+
 Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/reporte_pdf', [InformesController::class , 'reporte_pdf']);
-
 Route::get('/datos', [ApiController::class, 'recibe'])->name('api.rest');
+
+Route::get('/reporte_pdf', [InformesController::class , 'reporte_pdf'])->name('pagina.reporte');
+
+Route::get('/reporte/anio', [InformesController::class, 'reporte_anio'])->name('reporte_pdf');
+
+Route::get('/datosMap', [ApiMapController::class, 'recibe'])->name('apimap.rest');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', [CreaObjeto::class, 'dashboard'])->name('dashboard');
 
@@ -127,6 +133,22 @@ Route::get('/reportes/donutDia', [GeneralController::class, 'donutDia'])->name('
 Route::get('/reportes/donutCentro', [GeneralController::class, 'donutCentro'])->name('reportes.donutCentro');
 
 Route::get('/reportes/donutJaula', [GeneralController::class, 'donutJaula'])->name('reportes.donutJaula');
+
+Route::get('/reporterapido/centros', [GeneralController::class, 'rellena_centros'])->name('reporterapido.centro');
+
+Route::get('/reporterapido/anio1', [GeneralController::class, 'rellena_anio1'])->name('reporterapido.anio1');
+
+Route::get('/reporterapido/anio2', [GeneralController::class, 'rellena_anio2'])->name('reporterapido.anio2');
+
+Route::get('/reporterapido/mes1', [GeneralController::class, 'rellena_mes1'])->name('reporterapido.mes1');
+
+Route::get('/reporterapido/mes2', [GeneralController::class, 'rellena_mes2'])->name('reporterapido.mes2');
+
+Route::get('/reporterapido/dia1', [GeneralController::class, 'rellena_dia1'])->name('reporterapido.dia1');
+
+Route::get('/reporterapido/dia2', [GeneralController::class, 'rellena_dia2'])->name('reporterapido.dia2');
+
+
 
 
 

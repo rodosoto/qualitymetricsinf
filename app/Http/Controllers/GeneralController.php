@@ -571,6 +571,109 @@ class GeneralController extends Controller
     }
 
 
+    public function rellena_anio1(Request $request){
+
+        $anios = Medicionfilete::selectRaw('YEAR(created_at) as date')->where('empresa', $request->empresa)->distinct()->get();
+
+        $resp = array();
+
+        $resp[3] = count($anios);
+
+        for ( $i = 0 ; $i < count($anios) ; $i++ ){
+            $resp[0][$i] = $anios[$i]->date;
+            
+        }
+
+        return response($resp);
+
+    }
+
+    public function rellena_anio2(Request $request){
+
+        $anios = Medicionfilete::selectRaw('YEAR(created_at) as date')->whereYear('created_at', '>=' ,$request->anio )->where('empresa', $request->empresa)->distinct()->get();
+
+        $resp = array();
+
+        $resp[3] = count($anios);
+
+        for ( $i = 0 ; $i < count($anios) ; $i++ ){
+            $resp[0][$i] = $anios[$i]->date;
+            
+        }
+
+        return response($resp);
+
+    }
+
+    public function rellena_mes1(Request $request){
+
+        $meses = Medicionfilete::selectRaw('MONTH(created_at) as date')->whereYear('created_at', $request->anio)->where('empresa', $request->empresa)->distinct()->get();
+
+        $resp = array();
+
+        $resp[3] = count($meses);
+
+        for ( $i = 0 ; $i < count($meses) ; $i++ ){
+            $resp[0][$i] = $meses[$i]->date;
+            
+        }
+
+        return response($resp);
+
+    }
+
+    public function rellena_mes2(Request $request){
+
+        $meses = Medicionfilete::selectRaw('MONTH(created_at) as date')->whereYear('created_at', '>=', $request->anio)->whereMonth('created_at', '>=', $request->mes)->where('empresa', $request->empresa)->distinct()->get();
+
+        $resp = array();
+
+        $resp[3] = count($meses);
+
+        for ( $i = 0 ; $i < count($meses) ; $i++ ){
+            $resp[0][$i] = $meses[$i]->date;
+            
+        }
+
+        return response($resp);
+
+    }
+
+    public function rellena_dia1(Request $request){
+
+        $dias = Medicionfilete::selectRaw('DAY(created_at) as date')->whereYear('created_at', $request->anio)->whereMonth('created_at', $request->mes)->where('empresa', $request->empresa)->distinct()->get();
+
+        $resp = array();
+
+        $resp[3] = count($dias);
+
+        for ( $i = 0 ; $i < count($dias) ; $i++ ){
+            $resp[0][$i] = $dias[$i]->date;
+            
+        }
+
+        return response($resp);
+
+    }
+
+    public function rellena_dia2(Request $request){
+
+        $dias = Medicionfilete::selectRaw('DAY(created_at) as date')->distinct()->whereYear('created_at', $request->anio)->whereMonth('created_at', $request->mes)->whereDay('created_at', '>=', $request->dia)->where('empresa', $request->empresa)->get();
+
+        $resp = array();
+
+        $resp[3] = count($dias);
+
+        for ( $i = 0 ; $i < count($dias) ; $i++ ){
+            $resp[0][$i] = $dias[$i]->date;
+            
+        }
+
+        return response($resp);
+
+    }
+
+
 
 
 }

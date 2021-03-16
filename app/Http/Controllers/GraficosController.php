@@ -31,7 +31,7 @@ class GraficosController extends Controller
             }
 
             $map = new Mapafilete();
-            $map = Mapafilete::where('tipo','hem')->where('created_at','LIKE','%'.$date.'%')->where('maquina',$sectionCod)->get();
+            $map = Mapafilete::where('created_at','LIKE','%'.$date.'%')->where('maquina',$sectionCod)->get();
 
             if(count($map) == 0){
                 return response('vacio');
@@ -41,7 +41,7 @@ class GraficosController extends Controller
 
             for ( $i = 0 ; $i < count($map) ; $i++ ){
                 $respArray[0][$i] = $map[$i]->barcode;
-                $respArray[1][$i] = $map[$i]->map;
+                $respArray[1][$i] = $map[$i]->mapHem;
             }
 
             return response($respArray);
@@ -65,7 +65,7 @@ class GraficosController extends Controller
             }
 
             $map = new Mapafilete();
-            $map = Mapafilete::where('tipo','gap')->where('maquina',$sectionCod)->where('created_at','LIKE','%'.$date.'%')->get();
+            $map = Mapafilete::where('maquina',$sectionCod)->where('created_at','LIKE','%'.$date.'%')->get();
 
             if(count($map) == 0){
                 return response('vacio');
@@ -75,7 +75,7 @@ class GraficosController extends Controller
 
                 for ( $i = 0 ; $i < count($map) ; $i++ ){
                     $respArray[0][$i] = $map[$i]->barcode;
-                    $respArray[1][$i] = $map[$i]->map;
+                    $respArray[1][$i] = $map[$i]->mapGap;
                 }
 
                 return response($respArray); 
@@ -100,7 +100,7 @@ class GraficosController extends Controller
             }
 
             $map = new Mapafilete();
-            $map = Mapafilete::where('tipo','mel')->where('maquina',$sectionCod)->where('created_at','LIKE','%'.$date.'%')->get();
+            $map = Mapafilete::where('maquina',$sectionCod)->where('created_at','LIKE','%'.$date.'%')->get();
 
             if(count($map) == 0){
                 return response('vacio');
@@ -110,7 +110,7 @@ class GraficosController extends Controller
 
                 for ( $i = 0 ; $i < count($map) ; $i++ ){
                     $respArray[0][$i] = $map[$i]->barcode;
-                    $respArray[1][$i] = $map[$i]->map;
+                    $respArray[1][$i] = $map[$i]->mapMel;
                 }
 
                 return response($respArray);
@@ -120,16 +120,12 @@ class GraficosController extends Controller
 
     public function graficosBarra(Request $request){
         if($request->ajax()){
-
             $carbon = new \Carbon\Carbon();
             $date = Carbon::now();
             $date = $date->format('Y-m-d');
-
             $med = new Medicionfilete();
             $med = Medicionfilete::select('id')->where('maquina',$request->id)->where('created_at', 'LIKE','%'.$date.'%')->get();
-
             $resp = array();
-
             if( $request->empresa!=""){
                 for ( $i = 20 ; $i < 35 ; $i++){
                     $resp[$i][0] = Medicionfilete::select('id')->where('colorEntero',$i)->where('maquina',$request->id)->where('empresa',$request->empresa)->where('created_at', 'LIKE','%'.$date.'%')->get();

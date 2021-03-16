@@ -15,43 +15,79 @@ use App\Models\Maquina;
 
 class ApiController extends Controller
 {
+
     public function recibe(Request $request){
+
+        //sectionCod ultimos 3 digitos son de la maquina
+
+        $json = json_decode($request);
+        echo $json; 
+
+        $sectionCod = $request->sectionCod;
+        $caracteres = preg_split('//', $sectionCod, -1, PREG_SPLIT_NO_EMPTY);
+        $maquina = $caracteres[3].$caracteres[4].$caracteres[5];
+        $id_empresa = $caracteres[3];
+
 
     	$centro_json = $request->centro;
     	$jaula_json = $request->jaula;
-        $empresa = 
     		
     	//creacion de objetos para hacer consulta eloquent
     	$centro = new Centro();
     	$jaula = new Jaula();
 
     	$centro = Centro::select('id')->where('nombre_centro', $centro_json)->get();
-    	if(empty($centro)){
+    	if(count($centro)==0){
     		$centro_add = new Centro();
-            $centro->nombre_centro = $centro_json;
+            $centro_add->nombre_centro = $centro_json;
+            $centro_add->ubicacion = "";
+            $centro_add->empresa = $id_empresa;
             $centro_add->save();
     	}
 
     	$jaula = Jaula::select('id')->where('numero',$jaula_json)->get();
-    	if(empty($jaula)){
+    	if(count($jaula)==0){
     		$jaula_add = new Jaula();
-            $centro->numero = $jaula_json;
+            $jaula_add->numero = $jaula_json;
+            $jaula_add->empresa = $id_empresa;
+            $jaula_add->centro = $centro_json;
             $jaula_add->save();
     	}
 
-    	//sectionCod ultimos 3 digitos son de la maquina
 
-    	$sectionCod = $request->input('sectionCod');
-    	$caracteres = preg_split('//', $sectionCod, -1, PREG_SPLIT_NO_EMPTY);
-    	$maquina = $caracteres[4].$caracteres[5].$caracteres[6];
+        //seleccionamos el id de la maquina
+
+        $id_maq = Maquina::select('id')->where('tipo','Filete')->where('modelo',$maquina )->get();
+        if( count($id_maq)>0){
+            $id_maq = $id_maq[0]->id;
+        }
+        else{
+            $new_maq = new Maquina();
+            $new_maq->tipo = 'Filete';
+            $new_maq->modelo = $maquina;
+            $new_maq->empresa = $id_empresa;
+            $new_maq->nombre = "";
+            $new_maq->estado = "off";
+            $new_maq->centro = $centro_json;
+            $new_maq->jaula = $jaula_json;
+
+            if($new_maq->save()){
+                $id_maq = Maquina::select('id')->where('tipo','Filete')->where('modelo',$maquina )->get();
+                $id_maq = $id_maq[0]->id;
+            }
+
+
+        }
+
+
     	if($caracteres[0]=='f' || $caracteres[0]=='F'){ 
     		
     		//Creacion de objeto medicion filete
     		$medicion = new Medicionfilete();
     		$medicion->sectionCod = $sectionCod;
     		$medicion->barcode = $request->barcode;
-    		$medicion->centro = $centro[0]->id;
-    		$medicion->jaula = $jaula[0]->id;
+    		$medicion->centro = $request->centro;
+    		$medicion->jaula = $request->jaula;
     		$medicion->colorEntero = $request->colorEntero;
     		$medicion->colorLomo = $request->colorLomo;
     		$medicion->colorBelly = $request->colorBelly; 
@@ -63,7 +99,9 @@ class ApiController extends Controller
             $medicion->areaMel = $request->areaMel; 
             $medicion->ptosMel = $request->ptosMel; 
             $medicion->areaHem = $request->areaHem; 
-            $medicion->puntosHem = $request->ptosHem; 
+            $medicion->puntosHem = $request->puntosHem;
+            $medicion->maquina = $id_maq; 
+            $medicion->empresa = $id_empresa;
 
             if($medicion->save()){
             	$med_maquina = new Medicionmaquinasf();
@@ -82,8 +120,8 @@ class ApiController extends Controller
 
             	if($med_maquina->save()){
             		return json_encode(array(
-            			'status' => 'succes'
-                    );
+            			'status' => 'success'
+                    ));
             	}
             }
 

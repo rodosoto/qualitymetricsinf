@@ -16,8 +16,9 @@ class Mapafiletes extends Migration
         Schema::create('mapafiletes', function(Blueprint $table){
             $table->id();
             $table->string('barcode');
-            $table->string('tipo');
-            $table->json('map');
+            $table->json('mapMel');
+            $table->json('mapHem');
+            $table->json('mapGap');
             $table->string('maquina');
             $table->timestamps();
         });
